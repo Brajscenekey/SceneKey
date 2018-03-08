@@ -679,7 +679,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void checkEventAvailablity(final boolean showProgress) {
+    public void checkEventAvailablity(final boolean showProgress) {
         if (latitudeAdmin!=0.0d&&longitudeAdmin!=0.0d)
         {
             showProgDialog(false,TAG);

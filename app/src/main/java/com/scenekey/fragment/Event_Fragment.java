@@ -312,6 +312,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         super.onPause();
     }
 
+
     private void setOnClick(View... views) {
         for (View v : views) {
             v.setOnClickListener(this);
@@ -1113,6 +1114,13 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
 
             try {
                 ((Event_Search_Tag_Fragment) fragment).setVisibility();
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ((NearEvent_Fragment) fragment).eventApiRefresh();
                 break;
             } catch (Exception e) {
                 e.printStackTrace();

@@ -57,11 +57,11 @@ public class NearEvent_Fragment extends Fragment {
         this.eventsList = eventsList;
     }
 
- public void setNearLatLng(String[] strings) {
-       currentLatLng=strings;
+    public void setNearLatLng(String[] strings) {
+        currentLatLng=strings;
     }
 
-    void setRecyclerView() {
+    private void setRecyclerView() {
         if (rcViewNearEvent.getAdapter() == null) {
             SearchEvent_Adapter nearEventAdapter = new SearchEvent_Adapter(activity, eventsList,currentLatLng);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity);
@@ -72,5 +72,9 @@ public class NearEvent_Fragment extends Fragment {
         } else {
             rcViewNearEvent.getAdapter().notifyDataSetChanged();
         }
+    }
+
+    public void eventApiRefresh(){
+        activity.checkEventAvailablity(true);
     }
 }
