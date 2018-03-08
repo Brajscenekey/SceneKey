@@ -25,7 +25,6 @@ public class Demo_Comment_Fragment extends Fragment implements View.OnClickListe
     private Demo_Event_Fragment fragment;
     private HomeActivity activity;
     private Context context;
-
     private final String TAG = Demo_Comment_Fragment.class.toString();
     private int maxNumber = 120;
     private int count = 0;
