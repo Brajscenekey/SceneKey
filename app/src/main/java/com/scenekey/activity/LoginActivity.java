@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setStatusBarColor();
         initView();
         utility.checkGpsStatus();
+
         sessionManager.setSoftKey(hasSoftKeys(getWindowManager()));
     }
 
