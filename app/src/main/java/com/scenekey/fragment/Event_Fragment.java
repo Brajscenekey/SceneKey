@@ -224,7 +224,14 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         FloatingActionButton fabMenu3_comment = view.findViewById(R.id.fabMenu3_comment);
         fabMenu1_like.setTextView(new TextView[]{txt_hide_all_one, txt_hide_all_two});
         rtlv_top.getLayoutParams().height = ((HomeActivity.ActivityWidth) * 3 / 4);
-        getAllData();
+
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                activity.showProgDialog(false,TAG);
+                getAllData();
+            }
+        });
 
         if (userInfo().firstTimeDemo) {
             demoView.setVisibility(View.VISIBLE);
@@ -761,6 +768,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
      */
     private void getResponse(String response) throws Exception  {
         JSONObject obj1 = new JSONObject(response);
+        activity.dismissProgDialog();
         if (eventDetails == null) eventDetails = new EventDetails();
         try {
             if (obj1.has("eventattendy"))
@@ -1177,13 +1185,14 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
             StringRequest request = new StringRequest(Request.Method.POST, WebServices.LISTEVENTFEED, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    activity.dismissProgDialog();
+
                     // get response
                     try {
                         if (response != null) getResponse(response);
                         else  Utility.showToast(context, getString(R.string.somethingwentwrong), 0);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        activity.dismissProgDialog();
                     }
                 }
             }, new Response.ErrorListener() {
