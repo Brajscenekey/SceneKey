@@ -51,6 +51,8 @@ public class Event_Search_Tag_Fragment extends Fragment implements View.OnClickL
     private HomeActivity activity;
     private String lat="",lng="";
     private String selected;
+
+
     private ArrayList<Tags> list;
     // private ArrayList<EventsBTag> list_events;
     private ArrayList<Events> list_events;
