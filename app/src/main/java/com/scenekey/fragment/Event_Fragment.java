@@ -720,9 +720,9 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                         JSONObject respo = new JSONObject(response);
                         if(respo.getInt("success")==0){
                             Utility.showToast(context,respo.getString("msg"),0);
-                            activity.showCustomPopup("Picture has successfully posted", String.valueOf(R.font.arial_regular), 1);
+                            activity.showCustomPopup("Photo has been posted successfully.", String.valueOf(R.font.arial_regular), 1);
                         } else {
-                            activity.showCustomPopup("Picture has successfully posted", String.valueOf(R.font.arial_regular), 1);
+                            activity.showCustomPopup("Photo has been posted successfully.", String.valueOf(R.font.arial_regular), 1);
                         }
                     }catch (Exception e){
                         activity.incrementKeyPoints(getString(R.string.kp_img_post));

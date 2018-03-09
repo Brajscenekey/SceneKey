@@ -181,7 +181,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
 
                     try {
                         if (new JSONObject(response).getString("msg").equals("Success")) {
-                            activity.showCustomPopup("Comment has successfully posted", String.valueOf(R.font.arial_regular), 1);
+                            activity.showCustomPopup("Comment has been posted successfully.", String.valueOf(R.font.arial_regular), 1);
                         }
                     }catch (Exception e){
                         e.printStackTrace();
