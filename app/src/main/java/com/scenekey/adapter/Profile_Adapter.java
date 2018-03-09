@@ -116,8 +116,7 @@ public class Profile_Adapter extends BaseAdapter {
             }
 
             itemView.setTag(holder);
-        }
-       /* else {
+        } else {
             Holder holder  = (Holder) itemView.getTag();
             final Feeds feeds = feedList.get(position);
             holder.txt_time.setVisibility(View.GONE);
@@ -165,16 +164,8 @@ public class Profile_Adapter extends BaseAdapter {
                 Picasso.with(context).load(WebServices.FEED_IMAGE + feeds.feed).placeholder(R.drawable.def_scene).into(holder.img_event);
             }
 
-        }*/
+        }
         return itemView;
-    }
-
-    private class Holder {
-        private TextView txt_comment, txt_EE;
-        private TextView txt_date, txt_time ,txt_at;
-        private ImageView img_event;
-        private RelativeLayout rtlv_EE;
-        private View gap;
     }
 
     /**
@@ -189,7 +180,6 @@ public class Profile_Adapter extends BaseAdapter {
         return dateArray[2]+"/"+dateArray[1]+"/"+dateArray[0];
     }
 
-
     private String getTimeInFormat(String date) {
         String dateS = date.split(" ")[1];
         String dateArray[] = dateS.split(":");
@@ -198,6 +188,14 @@ public class Profile_Adapter extends BaseAdapter {
             return hour + ":" + dateArray[1] + " pm";
         }
         return dateArray[0] + ":" + dateArray[1] + " am ";
+    }
+
+    private class Holder {
+        private TextView txt_comment, txt_EE;
+        private TextView txt_date, txt_time, txt_at;
+        private ImageView img_event;
+        private RelativeLayout rtlv_EE;
+        private View gap;
     }
 
 

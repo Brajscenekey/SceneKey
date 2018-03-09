@@ -8,12 +8,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,8 +32,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.facebook.AccessToken;
 import com.scenekey.R;
 import com.scenekey.activity.HomeActivity;
-import com.scenekey.activity.ImageUploadActivity;
-import com.scenekey.aws_service.AWSImage;
 import com.scenekey.cus_view.ProfilePopUp;
 import com.scenekey.fragment.Event_Fragment;
 import com.scenekey.fragment.Profile_Fragment;
@@ -56,25 +52,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
 
 //import org.apache.commons.lang3.StringEscapeUtils;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     private final String TAG = DataAdapter.class.toString();
+    public ArrayList<ImagesUpload> imageList;
     private HomeActivity activity;
     private Context context;
     private String data[];
-
     private ImageView img_p1_profile;
     private CognitoCredentialsProvider credentialsProvider;
     private  Dialog dialog;
-
     private int currentImage;
     private Event_Fragment fragment;
-
-    private ArrayList<ImagesUpload> imageList;
+    private DataAdapter dataAdapter = this;
     private ArrayList<EventAttendy> roomPersons;
     private int count;
 
@@ -135,7 +128,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                     popUpMy(position );
                 } else {
                     try {
-                        if (fragment.check())newPopUp(attendy,false);
+                        if (fragment.check()) {
+                            downloadFileFromS3(attendy.userFacebookId, (credentialsProvider == null ? credentialsProvider = getCredentials() : credentialsProvider));
+                            newPopUp(attendy, false);
+                        }
                             //    popupRoom(position);
 
                         else fragment.cantInteract();
@@ -153,45 +149,30 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         return roomPersons.size();
     }
 
-
-
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txt_name_gvb1;
-        private ImageView img_profile_gvb1;
-
-        ViewHolder(View view) {
-            super(view);
-
-            txt_name_gvb1 =  view.findViewById(R.id.txt_name_gvb1);
-            img_profile_gvb1 =  view.findViewById(R.id.img_profile_gvb1);
-        }
-    }
-
     private void popUpMy(final int position) {
         final ImageView img_red, img_yellow, img_green;
         dialog = new Dialog(activity, android.R.style.Theme_Translucent);
         final TextView txt_stop, txt_caution, txt_go;
         final TextView txt_title ,txt_my_details;
 
-        View popupview = LayoutInflater.from(activity).inflate(R.layout.custom_my_profile_popup, null);
+        View popupView = LayoutInflater.from(activity).inflate(R.layout.custom_my_profile_popup, null);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
-        dialog.setContentView(popupview);
+        dialog.setContentView(popupView);
 
-        img_p1_profile =  popupview.findViewById(R.id.img_p1_profile);
-        LinearLayout llMyProfile =  popupview.findViewById(R.id.llMyProfile);
-        img_green =  popupview.findViewById(R.id.img_green);
-        img_yellow =  popupview.findViewById(R.id.img_yellow);
-        img_red =  popupview.findViewById(R.id.img_red);
-        ImageView img_left =  popupview.findViewById(R.id.img_left);
-        ImageView img_right =  popupview.findViewById(R.id.img_right);
-        txt_stop =  popupview.findViewById(R.id.txt_stop);
-        txt_caution =  popupview.findViewById(R.id.txt_caution);
-        txt_go =  popupview.findViewById(R.id.txt_go);
-        txt_title =  popupview.findViewById(R.id.txt_title);
-        txt_my_details =  popupview.findViewById(R.id.txt_my_details);
-        TextView txt_bio =  popupview.findViewById(R.id.tv_my_bio);
+        img_p1_profile = popupView.findViewById(R.id.img_p1_profile);
+        LinearLayout llMyProfile = popupView.findViewById(R.id.llMyProfile);
+        img_green = popupView.findViewById(R.id.img_green);
+        img_yellow = popupView.findViewById(R.id.img_yellow);
+        img_red = popupView.findViewById(R.id.img_red);
+        ImageView img_left = popupView.findViewById(R.id.img_left);
+        ImageView img_right = popupView.findViewById(R.id.img_right);
+        txt_stop = popupView.findViewById(R.id.txt_stop);
+        txt_caution = popupView.findViewById(R.id.txt_caution);
+        txt_go = popupView.findViewById(R.id.txt_go);
+        txt_title = popupView.findViewById(R.id.txt_title);
+        txt_my_details = popupView.findViewById(R.id.txt_my_details);
+        TextView txt_bio = popupView.findViewById(R.id.tv_my_bio);
 
         txt_bio.setText(activity.userInfo().bio);
 
@@ -292,11 +273,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             }
         });
         dialog.show();
-        //popupview.setBackgroundColor(0);
+        //popupView.setBackgroundColor(0);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
 
-        downloadFileFromS3((credentialsProvider==null?credentialsProvider = getCredentials():credentialsProvider));
+        downloadFileFromS3(SceneKey.sessionManager.getFacebookId(), (credentialsProvider == null ? credentialsProvider = getCredentials() : credentialsProvider));
     }
 
     private void setUserStatus(int i, ImageView imageView) {
@@ -367,7 +348,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     private void newPopUp(final EventAttendy obj ,boolean myprofile){
-        new ProfilePopUp(activity,4,obj) {
+        new ProfilePopUp(activity, 4, obj, dataAdapter) {
             @Override
             public void onClickView(TextView textView, ProfilePopUp profilePopUp ) {
                 profilePopUp.setText(textView.getText().toString());
@@ -386,8 +367,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }.show();
     }
 
-
-    private void downloadFileFromS3(CognitoCredentialsProvider credentialsProvider){//, CognitoCachingCredentialsProvider credentialsProvider){
+    private void downloadFileFromS3(final String fbId, CognitoCredentialsProvider credentialsProvider) {//, CognitoCachingCredentialsProvider credentialsProvider){
 
         try {
             final AmazonS3Client s3Client;
@@ -399,7 +379,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 @Override
                 public void run() {
                     try {
-                        ObjectListing listing = s3Client.listObjects( "scenekey-profile-images", SceneKey.sessionManager.getFacebookId());
+                        ObjectListing listing = s3Client.listObjects("scenekey-profile-images", fbId);
                         List<S3ObjectSummary> summaries = listing.getObjectSummaries();
 
 
@@ -431,6 +411,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     private void updateImages(final List<S3ObjectSummary> summaries){
+        imageList.clear();
         for(S3ObjectSummary obj :summaries ){
             imageList.add(new ImagesUpload(obj.getKey()));
         }
@@ -470,6 +451,18 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         //Utility.printBigLogcat("Acess " , AccessToken.getCurrentAccessToken().getToken());
         credentialsProvider.setLogins(logins);
         return credentialsProvider;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView txt_name_gvb1;
+        private ImageView img_profile_gvb1;
+
+        ViewHolder(View view) {
+            super(view);
+
+            txt_name_gvb1 = view.findViewById(R.id.txt_name_gvb1);
+            img_profile_gvb1 = view.findViewById(R.id.img_profile_gvb1);
+        }
     }
 
 }

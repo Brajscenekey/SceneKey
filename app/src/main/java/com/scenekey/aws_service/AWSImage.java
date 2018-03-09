@@ -15,8 +15,6 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -29,7 +27,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.scenekey.helper.Constant;
-import com.scenekey.helper.CustomProgressBar;
 import com.scenekey.helper.WebServices;
 import com.scenekey.model.UserInfo;
 import com.scenekey.util.SceneKey;
@@ -41,7 +38,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -116,7 +112,7 @@ public class AWSImage {
                 if(state.equals(TransferState.COMPLETED)){
                     // Constant.DEF_PROFILE= WebServices.USER_IMAGE+imageKey;
                     Utility.e("Image upload","State Change" + state);
-                    setDefaultImageOnServer(WebServices.USER_IMAGE+key1,key1);
+                    setDefaultImageOnServer(WebServices.USER_IMAGE + imageKey, imageKey);
                 }
                 if(state.equals(TransferState.FAILED)){
                 /*Toast.makeText(Image_uploade_Activity.this, "State Change" + state,
@@ -165,7 +161,7 @@ public class AWSImage {
         return credentialsProvider;
     }
 
-    private void setDefaultImageOnServer(final String key, String s){
+    private void setDefaultImageOnServer(final String key, final String s) {
 
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(context);

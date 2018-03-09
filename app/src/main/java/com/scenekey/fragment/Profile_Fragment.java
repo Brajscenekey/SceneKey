@@ -37,7 +37,6 @@ import com.scenekey.activity.ImageUploadActivity;
 import com.scenekey.adapter.Profile_Adapter;
 import com.scenekey.helper.Constant;
 import com.scenekey.helper.WebServices;
-import com.scenekey.listener.StatusBarHide;
 import com.scenekey.model.EventAttendy;
 import com.scenekey.model.Feeds;
 import com.scenekey.model.ImagesUpload;
@@ -60,13 +59,11 @@ import java.util.Map;
 
 public class Profile_Fragment extends Fragment implements View.OnClickListener {
 
+    private final String TAG = Profile_Fragment.class.toString();
     private Context context;
     private HomeActivity activity;
     private Utility utility;
     private CognitoCredentialsProvider credentialsProvider;
-
-    private final String TAG = Profile_Fragment.class.toString();
-
     private ImageView img_profile_pic,img_profile_pic2;
     private EventAttendy attendy;
     private boolean myProfile;
@@ -445,7 +442,10 @@ comment for:- fb and count not show for current scenario
     }
 
     private synchronized void getResponse(String response) throws JSONException {
-        if (feedsList == null) feedsList = new ArrayList<>();
+        if (feedsList == null) {
+            feedsList = new ArrayList<>();
+            feedsList.clear();
+        }
         JSONObject object = new JSONObject(response);
 
         try {

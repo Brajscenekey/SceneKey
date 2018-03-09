@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cus_round_all_edgeblack_white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_35sdp"
+            android:fontFamily="@font/raleway_regular"
+            android:gravity="center"
+            android:text="Select"
+            android:textColor="@color/gray2"
+            android:textSize="@dimen/_14sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_bottom" />
+
+        <TextView
+            android:id="@+id/tv_camera"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:fontFamily="@font/raleway_regular"
+            android:gravity="center"
+            android:text="Take photo"
+            android:textColor="@color/blueToastTxt"
+            android:textSize="@dimen/_15ssp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@drawable/cus_round_all_edgeblack_white"
+        android:fontFamily="@font/raleway_regular"
+        android:gravity="center"
+        android:text="Cancel"
+        android:textColor="@color/blueToastTxt"
+        android:textSize="@dimen/_15ssp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_bottom" />
+
+</LinearLayout>

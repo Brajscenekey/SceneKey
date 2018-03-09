@@ -36,12 +36,10 @@ import java.util.Map;
 
 public class Comment_Fragment extends Fragment implements View.OnClickListener {
 
+    private final String TAG = Comment_Fragment.class.toString();
     private HomeActivity activity;
     private Context context;
     private Utility utility;
-
-    private final String TAG = Comment_Fragment.class.toString();
-
     private String[] currentLatLng;
     private int maxNumber = 120;
     private TextView txt_char;
@@ -62,6 +60,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
         ImageView img_profile =  view.findViewById(R.id.img_profile);
         TextView txt_post_comment =  view.findViewById(R.id.txt_post_comment);
         ImageView img_f1_back =  view.findViewById(R.id.img_f1_back);
+        view.findViewById(R.id.mainlayout).setOnClickListener(this);
         txt_char.setText(maxNumber + " ");
 
         img_f1_back.setOnClickListener(this);
@@ -97,7 +96,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
         utility = new Utility(context);
     }
 
-    UserInfo userInfo() {
+    private UserInfo userInfo() {
         return activity.userInfo();
     }
 
@@ -108,6 +107,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
                 if (kyeInStatus.equals(Constant.KEY_NOTEXIST)) {
                     activity.showProgDialog(false,TAG);
                     addUserIntoEvent();
+
                 } else {
                     activity.showProgDialog(false,TAG);
                     commentEvent();
@@ -117,6 +117,10 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.img_f1_back:
                 activity.onBackPressed();
+                break;
+
+            case R.id.mainlayout:
+                //for background click on fragment
                 break;
         }
     }
@@ -174,8 +178,11 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
                 public void onResponse(String response) {
                     activity.dismissProgDialog();
                     // get response
+
                     try {
-                        if(new JSONObject(response).getString("msg").equals("Success")) activity.incrementKeyPoints(getString(R.string.kp_comment));
+                        if (new JSONObject(response).getString("msg").equals("Success")) {
+                            activity.showCustomPopup("Comment has successfully posted", String.valueOf(R.font.arial_regular), 1);
+                        }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -195,7 +202,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
                     params.put("user_id",  userInfo().userID);
                     params.put("event_id", eventId);
                     params.put("location", getLocation());
-                    params.put("comment", edt_comment.getText() + "");
+                    params.put("comment", edt_comment.getText().toString().trim());
                     params.put("ratingtime", activity.getCurrentTimeInFormat());
 
                     Utility.e(TAG, "" + params.toString());

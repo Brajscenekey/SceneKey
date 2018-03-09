@@ -207,13 +207,13 @@
     <string name="w_photo_limit"> Unfortunately, you are limited to only 5 profile photos </string>
     <string name="t_photo_limit"> Photo Limit Reached </string>
 
-    <string name="kp_like"> You liked this event. +1 Key Points </string>
+    <string name="kp_like"> You liked this event.</string>
     <string name="kp_msg_sent"> Message Sent! +1 Key Points </string>
     <string name="kp_nudge"> Good Nudge! +1 Key Points </string>
     <string name="kp_comment">_</string>
     <string name="kp_keyin">_</string>
     <string name="kp_img_post">_</string>
-    <string name="kp_unlike"> You unliked this event. -1 Key Points </string>
+    <string name="kp_unlike"> You unliked this event.</string>
 
     <string name="unfortunatly"> Hi, unfortunately, there are no events occurring in your area at this time.  Please check back for updates. </string>
     <string name="photo_error"> Opps.  There was a problem saving your photo.  Please try again or contact help@scenekey.com. </string>

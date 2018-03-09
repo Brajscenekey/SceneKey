@@ -2,12 +2,12 @@ package com.scenekey.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -26,6 +26,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -38,16 +39,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.scenekey.R;
 import com.scenekey.aws_service.Aws_Web_Service;
 import com.scenekey.fragment.Add_Fragment;
@@ -90,46 +87,35 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
-import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
-
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener,LocationListener{
-
-    private final String TAG="HomeActivity";
-    public Context context=this;
-
-    private FrameLayout frame_fragments;
-    private TextView tvHomeTitle,tv_key_points;
-    public ImageView img_profile;
-    private RelativeLayout rl_title_view;
-
-    private ArcMenu arcMenu;
 
     public static int ActivityWidth;
     public static int ActivityHeight;
     public static int ActivitybottomMarginOne = 0;
-
-    private RelativeLayout rtlv_one, rtlv_two,rtlv_three ,rtlv_five ,lastclicked;
+    private static UserInfo userInfo;
+    private final String TAG="HomeActivity";
+    public Context context=this;
+    public ImageView img_profile;
     public RelativeLayout rtlv_four;
     public FrameLayout frm_bottmbar;
+    public boolean isApiM, isKitKat, statusKey;
+    private FrameLayout frame_fragments;
+    private TextView tvHomeTitle,tv_key_points;
+    private RelativeLayout rl_title_view;
+    private ArcMenu arcMenu;
+    private RelativeLayout rtlv_one, rtlv_two,rtlv_three ,rtlv_five ,lastclicked;
     private ImageView img_three_logo ,img_three_one;
     private View view, bottom_margin_view ,top_status ;
-
     private boolean doubleBackPress;
-    private static UserInfo userInfo;
     private ArrayList<Events> eventsArrayList,eventsNearbyList;
     private boolean isPermissionAvail;
     private Map_Fragment map_fragment;
     private double latitude=0.0, longitude =0.0;
     private double latitudeAdmin=0.0, longitudeAdmin=0.0;
-
     private boolean checkGPS;
-
     private CustomProgressBar customProgressBar;
     private  LocationManager locationManager;
     private Utility utility;
-
-    public boolean isApiM, isKitKat,statusKey;
     private int position=0;
 
     @Override
@@ -786,6 +772,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                                     Utility.e("Near Event Size", String.valueOf(eventsNearbyList.size()));
                                     if (!(eventsNearbyList.size() <= 0))
                                         onNearByEventFound();
+                                    else {
+                                        replaceFragment(new Home_No_Event_Fragment());
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -945,7 +934,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     eventsNearbyList.add(events);
                 }
 
-                /*if (distance>Constant.MAXIMUM_DISTANCE){
+             /*   if (distance>Constant.MAXIMUM_DISTANCE){
                     keyStatus(events.getEvent().event_id);
                 }*/
 
@@ -1150,7 +1139,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     setTopStatus();
 
                 } else {
-                    Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_up);
+                    Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_up1);
                     Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.slide_in_up);
                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) frame_fragments.getLayoutParams();
                     layoutParams.bottomMargin = (int) getResources().getDimension(R.dimen.bottomBar_margin);
@@ -1276,13 +1265,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         new Aws_Web_Service() {
             @Override
             public okhttp3.Response onResponseUpdate(okhttp3.Response response) {
+                Utility.e(TAG, "Increment response " + response);
                 if(response==null) return null;
                 try {
                     String s = response.body().string();
                     if(new JSONObject(s).getInt("serverStatus")==2){
                         Utility.e("Response",s);
                         userInfo.keyPoints=((points+1)+"");
-                       updateSession(userInfo);
+                        showKeyPoints("+1 Key Points!");
+                        hideStatusBar();
+                        updateSession(userInfo);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -1292,7 +1284,34 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 return response;
             }
-        }.updateKeypoint(points+1,userInfo.userID);
+        }.updateKeyPoint(points + 1, userInfo.userID);
+    }
+
+    private void showKeyPoints(String s) {
+        final Dialog dialog = new Dialog(context);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setContentView(R.layout.custom_keypoint_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationLeftRight; //style id
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.gravity = Gravity.TOP;
+        dialog.getWindow().setAttributes(lp);
+
+        TextView tvKeyPoint;
+
+        tvKeyPoint = dialog.findViewById(R.id.tvKeyPoint);
+        tvKeyPoint.setText(s);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        }, 2000);
+
+        dialog.show();
     }
 
     public void decrementKeyPoints(final String msg){
@@ -1304,8 +1323,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     String s = response.body().string();
                     if(new JSONObject(s).getInt("serverStatus")==2){
-                        utility.showCustomPopup(msg, String.valueOf(R.font.arial_regular));
+                        //   utility.showCustomPopup(msg, String.valueOf(R.font.arial_regular));
 
+                        showKeyPoints("-1 Key Points!");
+                        hideStatusBar();
                         userInfo.keyPoints=(points <=0?0+"":(points-1)+"");
                         updateSession(userInfo);
                     }
@@ -1317,7 +1338,39 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 return response;
             }
-        }.updateKeypoint((points <=0?0:points-1),userInfo.userID);
+        }.updateKeyPoint((points <= 0 ? 0 : points - 1), userInfo.userID);
+    }
+
+    public void showCustomPopup(String message, String fontType, final int call) {
+        final Dialog dialog = new Dialog(context);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setContentView(R.layout.custom_popup);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        TextView tvPopupOk, tvMessages;
+
+        tvMessages = dialog.findViewById(R.id.custom_popup_tvMessage);
+        Typeface typeface = Typeface.create(fontType, Typeface.BOLD);
+        tvMessages.setTypeface(typeface);
+        tvPopupOk = dialog.findViewById(R.id.custom_popup_ok);
+        tvPopupOk.setText(R.string.ok);
+        tvMessages.setText(message);
+
+        tvPopupOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Show location settings when the user acknowledges the alert dialog
+                dialog.cancel();
+                if (call == 1) {
+                    incrementKeyPoints(getString(R.string.kp_like));
+                } else {
+                    decrementKeyPoints(getString(R.string.kp_unlike));
+                }
+
+            }
+        });
+
+        dialog.show();
     }
 
     public String getCurrentTimeInFormat() {
@@ -1456,77 +1509,36 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void keyPointsUpdate(){
 
-        try {
-            RequestQueue requestQueue = Volley.newRequestQueue(context);
+        final int points = Integer.parseInt(userInfo.keyPoints);
+        new Aws_Web_Service() {
+            @Override
+            public okhttp3.Response onResponseUpdate(okhttp3.Response response) {
+                if (response == null) return null;
+                try {
+                    String s = response.body().string();
+                    if (new JSONObject(s).getInt("serverStatus") == 2) {
 
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("method","PUT");
-            jsonBody.put("action","updateKeyPoints");
-            jsonBody.put("userid",userInfo.userID);
-            if (!userInfo.keyPoints.equals("0")) {
-                jsonBody.put("keyPoints", Integer.parseInt(userInfo.keyPoints) - 1);
-            }else {
-                jsonBody.put("keyPoints", 25+"");
+                        userInfo.keyPoints = Integer.parseInt(userInfo.keyPoints) - 1 + "";
+                        updateSession(userInfo);
+
+                        if (userInfo.keyPoints.equals("0")) {
+                            userInfo.keyPoints = 25 + "";
+                            updateSession(userInfo);
+                        }
+                        dismissProgDialog();
+                        //   utility.showCustomPopup(msg, String.valueOf(R.font.arial_regular));
+                        // TSnackbar.make(rl_title_view, "-1 Key Points!", TSnackbar.LENGTH_LONG).show();
+                        showKeyPoints("-1 Key Points!");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return response;
             }
+        }.updateKeyPoint((points <= 0 ? 0 : points - 1), userInfo.userID);
 
-            final String mRequestBody = jsonBody.toString();
-            Utility.e("RequestBody"  , mRequestBody);
-
-            StringRequest stringRequest = new StringRequest(Request.Method.PUT, WebServices.DEFAULT_IMAGE, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Utility.e("server image set", response);
-
-                    userInfo.keyPoints=Integer.parseInt(userInfo.keyPoints)-1+"";
-                    SceneKey.sessionManager.createSession(userInfo);
-
-                    if (userInfo.keyPoints.equals("0")){
-                        userInfo.keyPoints=25+"";
-                        SceneKey.sessionManager.createSession(userInfo);
-                    }
-
-                    dismissProgDialog();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Utility.e("LOG_VOLLEY E", error.toString());
-                    dismissProgDialog();
-                }
-            }) {
-                @Override
-                public String getBodyContentType() {
-                    return "application/json";
-                }
-
-                @Override
-                public byte[] getBody() throws AuthFailureError {
-                    try {
-                        return mRequestBody == null ? null : mRequestBody.getBytes();
-                    } catch (Exception uee) {
-                        //VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                        return null;
-                    }
-                }
-
-                @Override
-                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                    String responseString = "";
-                    if (response != null) {
-
-                        responseString = new String(response.data);
-                        //Util.printLog("RESPONSE", responseString.toString());
-                    }
-                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-                }
-            };
-            stringRequest.setShouldCache(false);
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000,1,0));
-            requestQueue.add(stringRequest);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            dismissProgDialog();
-        }
     }
 
 }

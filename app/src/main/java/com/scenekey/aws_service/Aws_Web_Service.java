@@ -2,6 +2,7 @@ package com.scenekey.aws_service;
 
 
 import android.os.AsyncTask;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +21,7 @@ public abstract class Aws_Web_Service  {
 
     Response response;
 
-    public Aws_Web_Service updateKeypoint(final int Keypoints, final String userID){
+    public Aws_Web_Service updateKeyPoint(final int Keypoints, final String userID) {
 
         new AsyncTask<Void, Void, Response>() {
             @Override

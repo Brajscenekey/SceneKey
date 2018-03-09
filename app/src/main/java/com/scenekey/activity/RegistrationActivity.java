@@ -12,13 +12,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -26,11 +26,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -59,14 +57,11 @@ import static com.scenekey.helper.Constant.MY_PERMISSIONS_REQUEST_LOCATION;
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener ,LocationListener{
 
-    private Context context=this;
     private static  final String TAG="RegistrationActivity";
-
+    private Context context = this;
     private EditText etRegiFullName,etRegiEmail,etRegiPwd;
     private Button btnRegiSignUp;
     private ImageView imgRegiMale,imgRegiFemale,imgUserImage;
-    private RelativeLayout relativeImgProfilePic;
-    private TextView tvRegiLogin;
     private Utility utility;
     private CustomProgressBar customProgressBar;
     private SessionManager sessionManager;
@@ -76,7 +71,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private String imageKey;
     private  LocationManager locationManager;
     private boolean checkGPS;
-    private CognitoCredentialsProvider credentialsProvider;
     private Bitmap profileImageBitmap;
     private   Pop_Up_Option pop_up_option;
 
@@ -110,7 +104,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
         imgRegiMale.setOnClickListener(this);
         imgRegiFemale.setOnClickListener(this);
-        findViewById(R.id.btnRegiSignUp).setOnClickListener(this);
+        btnRegiSignUp = findViewById(R.id.btnRegiSignUp);
+        btnRegiSignUp.setOnClickListener(this);
         findViewById(R.id.tvRegiLogin).setOnClickListener(this);
         findViewById(R.id.relativeImgProfilePic).setOnClickListener(this);
 

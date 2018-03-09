@@ -38,6 +38,15 @@
 
     </style>
 
+    <style name="DialogAnimationLeftRight" parent="AppTheme">
+        <item name="android:windowEnterAnimation">@anim/enter_from_left</item>
+        <item name="android:windowExitAnimation">@anim/exit_to_right</item>
+    </style>
+
+    <style name="DialogAnimationBottTop" parent="AppTheme">
+        <item name="android:windowEnterAnimation">@anim/slide_up2</item>
+        <item name="android:windowExitAnimation">@anim/slide_bottom2</item>
+    </style>
 
     <style name="fb_login">
         <item name="android:gravity">center</item>

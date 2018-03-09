@@ -21,8 +21,8 @@ import android.widget.TextView;
 
 import com.scenekey.R;
 import com.scenekey.activity.HomeActivity;
+import com.scenekey.adapter.DataAdapter;
 import com.scenekey.adapter.EmojiAdapter;
-import com.scenekey.fragment.Event_Fragment;
 import com.scenekey.helper.Constant;
 import com.scenekey.model.EventAttendy;
 import com.scenekey.util.CircleTransform;
@@ -38,30 +38,27 @@ import java.util.Arrays;
 
 public abstract class ProfilePopUp extends Dialog implements View.OnClickListener, DialogInterface.OnShowListener {
 
+    private static final int maxsize = 28; //Maximum size of recent grid view
+    public ArrayList<String> list;
     private HomeActivity activity;
     private Context context;
-
     private RecyclerView rclv_emoji;
-    private ImageView lastSelected,iv_indicator;
+    private ImageView lastSelected, iv_indicator, profileimg;
     private  TextView txt_send;
     private LinearLayout lr_send_nudge,lr_indicator;
-
     private int maxNudes,lastFillposition;
-    
-    public ArrayList<String> list;
-   
     private SharedPreferences preferences ;
     private String[] recent ;
-    
+    private int currentImage;
+    private DataAdapter dataAdapter;
     private boolean isLastFilled,isClicked;
- 
-    private static final int maxsize = 28 ; //Maximum size of recent grid view
-    
-    protected ProfilePopUp(@NonNull Activity activity, int maxNudes, EventAttendy obj) {
+
+    protected ProfilePopUp(@NonNull Activity activity, int maxNudes, EventAttendy obj, final DataAdapter dataAdapter) {
         super(activity, android.R.style.Theme_Translucent);
 
         this.activity= (HomeActivity) activity;
         this.context=activity;
+        this.dataAdapter = dataAdapter;
 
         View pop_up_view = LayoutInflater.from(context).inflate(R.layout.popup_nudge_n_notificaiton, null);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -75,8 +72,11 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
         ImageView iv_delete = pop_up_view.findViewById(R.id.iv_delete);
         LinearLayout llMain =  pop_up_view.findViewById(R.id.llMain);
         TextView tv_bio =  pop_up_view.findViewById(R.id.tv_my_bio);
+        final ImageView img_left = pop_up_view.findViewById(R.id.img_left);
+        final ImageView img_right = pop_up_view.findViewById(R.id.img_right);
         iv_indicator =  pop_up_view.findViewById(R.id.iv_indicator);
         ImageView img_cross = pop_up_view.findViewById(R.id.img_cross);
+        profileimg = pop_up_view.findViewById(R.id.img_profile_pic2);
         ImageView zero = pop_up_view.findViewById(R.id.zero);
         ImageView one = pop_up_view.findViewById(R.id.one);
         ImageView two = pop_up_view.findViewById(R.id.two);
@@ -94,19 +94,29 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
 
         this.maxNudes = maxNudes;
         list = new ArrayList<>();
-        setClicks(llMain,iv_delete, img_cross, one, two, three, four, five, zero, txt_send);
+        setClicks(llMain, iv_delete, img_cross, one, two, three, four, five, zero, txt_send, img_left, img_right);
         this.context = context;
         this.setOnShowListener(this);
         getRecentTask();
         ((TextView) pop_up_view.findViewById(R.id.tv_userName)).setText(obj.username);
         try {
-            ImageView profileimg = pop_up_view.findViewById(R.id.img_profile_pic2);
+
             Picasso.with(context).load(obj.getUserimage()).transform(new CircleTransform()).into(profileimg);
         }catch (Exception e){
             e.printStackTrace();
         }
         updateImageView(one);
         txt_send.setText("Nudge "+obj.username);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (dataAdapter.imageList.size() > 0) {
+                    img_left.setVisibility(View.VISIBLE);
+                    img_right.setVisibility(View.VISIBLE);
+                }
+            }
+        }, 2000);
     }
 
     private void setClicks(View... views){
@@ -148,6 +158,14 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
             case R.id.llMain:
                 activity.hideStatusBar();
                 this.dismiss();
+                break;
+
+            case R.id.img_left:
+                setUserImage(false);
+                break;
+
+            case R.id.img_right:
+                setUserImage(true);
                 break;
 
             case R.id.iv_delete:
@@ -212,6 +230,13 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
                 break;
         }
 
+    }
+
+    private void setUserImage(boolean isRight) {
+        if (dataAdapter.imageList.size() != 0) {
+            currentImage = (isRight ? (currentImage == dataAdapter.imageList.size() - 1 ? 0 : currentImage + 1) : (currentImage == 0 ? dataAdapter.imageList.size() - 1 : currentImage - 1));
+            Picasso.with(activity).load(dataAdapter.imageList.get(currentImage).path).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(profileimg);
+        }
     }
 
     private void delete(){

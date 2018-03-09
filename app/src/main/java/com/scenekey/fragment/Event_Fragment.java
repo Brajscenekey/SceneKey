@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,12 +50,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.scenekey.BuildConfig;
-import com.scenekey.cropper.CropImage;
-import com.scenekey.cropper.CropImageView;
 import com.scenekey.R;
 import com.scenekey.activity.HomeActivity;
 import com.scenekey.adapter.DataAdapter;
 import com.scenekey.adapter.GridChipsAdapter;
+import com.scenekey.cropper.CropImage;
+import com.scenekey.cropper.CropImageView;
 import com.scenekey.cus_view.Grid_multiRow;
 import com.scenekey.cus_view.ProfilePopUp_Notification;
 import com.scenekey.helper.Constant;
@@ -96,49 +98,36 @@ import java.util.TimerTask;
 
 public class Event_Fragment extends Fragment implements View.OnClickListener,StatusBarHide {
 
+    private static Timer timerHttp;
     public final String TAG = Event_Fragment.class.toString();
-
+    public boolean canCallWebservice, isInfoVisible, isPopUpShowing, canGetNotification;
+    public Double latitude, longitude;
+    public TextView txt_event_name, txt_not_started, txt_discrp, txt_room, txt_f2_badge, txt_calender_i1,
+            txt_hide_all_two, txt_hide_all_one, btn_got_it, txt_discipI_f2;
+    public FloatingActionButton fabMenu1_like, fabMenu2_picture;
+    //arrayLists
+    public ArrayList<Card> cardsList;
     private Context context;
     private HomeActivity activity;
     private Utility utility;
-
-    public boolean canCallWebservice,isInfoVisible,isPopUpShowing,canGetNotification;
-
-    public Double latitude,longitude;
     private String eventId,venueName;
     private String[] currentLatLng;
     private int currentNudge,noNotify,timer;
-
     private LinearLayout info_view,no_one;
     private RelativeLayout rtlv2_animate_f2,rtlv_top,demoView; //Demo Screen
     private ImageView img_infoget_f2, img_f10_back,image_map,img_notif;
-
-    public TextView txt_event_name,txt_not_started,txt_discrp,txt_room,txt_f2_badge,txt_calender_i1,
-            txt_hide_all_two,txt_hide_all_one,btn_got_it,txt_discipI_f2;
-
     private RecyclerView rclv_grid;
     private ScrollView scrl_all;
-
-    public FloatingActionButton fabMenu1_like,fabMenu2_picture;
     private FloatingActionMenu menu_blue;
-
     private Handler handler;
     private View popupview;
     private Dialog dialog;
-
-    private static Timer timerHttp;
     private Timer timerNudge;
-
     private   Uri imageUri;
-
     private EventDetails eventDetails;
     private Events event;
-
     //Tinder Swipe
     private SwipeCardView card_stack_view;
-
-    //arrayLists
-    public ArrayList<Card> cardsList;
     private ArrayList<NotificationData> nudgeList;
 
     //map data
@@ -536,8 +525,42 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     }
 
     private void captureImage() {
-        Permission permission = new Permission(activity);
-        if (permission.checkCameraPermission()) callIntent(Constant.INTENT_CAMERA);
+
+        final Dialog dialog = new Dialog(context);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setContentView(R.layout.custom_takephoto_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationBottTop; //style id
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.gravity = Gravity.BOTTOM;
+        dialog.getWindow().setAttributes(lp);
+
+        TextView tv_camera, tv_cancel;
+
+        tv_camera = dialog.findViewById(R.id.tv_camera);
+        tv_cancel = dialog.findViewById(R.id.tv_cancel);
+
+        tv_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                Permission permission = new Permission(activity);
+                if (permission.checkCameraPermission()) callIntent(Constant.INTENT_CAMERA);
+            }
+        });
+
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+
+
     }
 
     private void callIntent(int caseId) {
@@ -637,13 +660,13 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                         if (object.has("success")) if (object.getInt("success") == 1) {
                             if(object.getString("msg").contains(" liked the event.")){
                                 fabMenu1_like.setImageDrawable(getResources().getDrawable(R.drawable.red_heart));
-                                utility.showCustomPopup("you liked this event.", String.valueOf(R.font.arial_regular));
+                                activity.showCustomPopup("you liked this event.", String.valueOf(R.font.arial_regular), 1);
 
-                                activity.incrementKeyPoints(getString(R.string.kp_like));
+
                             }
                             else if(object.getString("msg").contains("unliked the event.")){
                                 fabMenu1_like.setImageDrawable(getResources().getDrawable(R.drawable.heart));
-                                activity.decrementKeyPoints(getString(R.string.kp_unlike));
+                                activity.showCustomPopup(getString(R.string.kp_unlike), String.valueOf(R.font.arial_regular), 0);
                             }
                             getAllData();
                             //{"success":1,"msg":"your have liked the event."}
@@ -691,16 +714,18 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                 public void onResponse(String response) {
                     activity.dismissProgDialog();
                     // get response
+                    Utility.e("Send picture response", response);
                     getAllData();
                     try {
                         JSONObject respo = new JSONObject(response);
                         if(respo.getInt("success")==0){
                             Utility.showToast(context,respo.getString("msg"),0);
-                            activity.incrementKeyPoints(getString(R.string.kp_img_post));
+                            activity.showCustomPopup("Picture has successfully posted", String.valueOf(R.font.arial_regular), 1);
+                        } else {
+                            activity.showCustomPopup("Picture has successfully posted", String.valueOf(R.font.arial_regular), 1);
                         }
-                        Utility.showToast(context,respo.getString("msg"),0);
-
                     }catch (Exception e){
+                        activity.incrementKeyPoints(getString(R.string.kp_img_post));
                         e.printStackTrace();
                     }
                 }
@@ -1043,7 +1068,6 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                 60000);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         activity.hideStatusBar();
@@ -1306,7 +1330,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                 public void onResponse(String response) {
                     activity.dismissProgDialog();
 
-                    utility.showCustomPopup(getResources().getString(R.string.goodNudge), String.valueOf(R.font.arial_regular));
+                    activity.showCustomPopup(getResources().getString(R.string.goodNudge), String.valueOf(R.font.arial_regular), 1);
 
                     if(dialog!=null) dialog.dismiss();
                     if(profilePop!=null) profilePop.dismiss();
@@ -1420,5 +1444,6 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         };
         popup.show();
     }
+
 }
 

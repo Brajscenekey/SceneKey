@@ -2,16 +2,12 @@ package com.scenekey.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -37,8 +33,8 @@ import java.util.Map;
 
 public class BioActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Context context=this;
     private final String TAG = Bio_Fragment.class.toString();
+    private Context context = this;
     private UserInfo userInfo;
     private TextView tv_for_remainChar;
     private EditText et_for_enterTxt;
@@ -212,7 +208,6 @@ public class BioActivity extends AppCompatActivity implements View.OnClickListen
             dismissProgDialog();
         }
     }
-
 
     private void callIntent() {
         Intent objSuccess=new Intent(context,HomeActivity.class);
