@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -15,10 +14,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.scenekey.R;
 import com.scenekey.activity.HomeActivity;
-import com.scenekey.activity.LoginActivity;
-import com.scenekey.util.SceneKey;
 import com.scenekey.util.Utility;
-
 
 import java.util.Date;
 import java.util.List;
@@ -27,31 +23,21 @@ import java.util.Random;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
-    Notification notification;
-
-
-
     final String title = "Notification!";
-
     boolean toActivity ;
+    private Notification notification;
+
     //11-01 15:58:49.211 17392-24749/com.scenekey E/MyFirebaseMsgService: From: 1034290158398{title={"notficationType":1}, message=You have been selected as an admin, notificationType=[]}
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        Utility.e(TAG, "From: " + remoteMessage.getFrom()+remoteMessage.getData());
+        Utility.e(TAG, "Message Notification Body: " + remoteMessage.getData().toString());
 //{title=, message=Donie Darko has commented on mindiii nights, notificationType=[]}
         //11-02 12:34:59.837 1474-2269/com.scenekey E/MyFirebaseMsgService: From: 1034290158398{title=, message=Arvind Patidar has commented on Paige Clem, notificationType=[]}
         //11-02 12:35:11.793 1474-2288/com.scenekey E/MyFirebaseMsgService: From: 1034290158398{title=, message=Arvind Patidar has commented on Paige Clem, notificationType=[]}
         String notificationMsg = remoteMessage.getData().get("message");
-        Intent intent =null;
-        {
-            if(SceneKey.sessionManager.isLoggedIn()){
-                intent = new Intent(this, HomeActivity.class);
-            }else {
-                intent = new Intent(this, LoginActivity.class);
-            }
-        }
-        sendNotification(remoteMessage.getTtl(), title, notificationMsg, intent ,false);
+
+        sendNotification(remoteMessage.getTtl(), title, notificationMsg, false);
 
 
 
@@ -151,13 +137,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     //This method is only generating push notification
     //It is same as we did in earlier posts
 
-    private void sendNotification(int id, String title, String messageBody , Intent intent , boolean send) {
-
+    private void sendNotification(int id, String title, String messageBody, boolean send) {
+        Intent intent = new Intent(this, HomeActivity.class);
+/*
+        intent.putExtra("reference_id", reference_id);
+        intent.putExtra("title", title);
+        intent.putExtra("body", body);*/
 
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Random r = new Random();
         int random = r.nextInt(899 - 65) + 65;
         int m = ((int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE))+random;
+
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, m, intent, PendingIntent.FLAG_ONE_SHOT);
         //if( intent == null ) pendingIntent = null;

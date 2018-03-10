@@ -340,7 +340,8 @@ public class Demo_Event_Fragment extends Fragment implements View.OnClickListene
     @Override
     public void onDestroyView() {
         handler.removeCallbacksAndMessages(null);
-        activity.setBBVisibility(View.VISIBLE, 300,TAG);
+        activity.setBBVisibility(View.VISIBLE, 500, TAG);
+        activity.showStatusBar();
         initialized = false;
         super.onDestroyView();
     }

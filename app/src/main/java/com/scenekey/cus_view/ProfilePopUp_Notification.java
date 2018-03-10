@@ -20,9 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.scenekey.R;
-
 import com.scenekey.activity.HomeActivity;
 import com.scenekey.adapter.EmojiAdapter_Notification;
+import com.scenekey.aws_service.AWSImage;
 import com.scenekey.helper.Constant;
 import com.scenekey.model.NotificationData;
 import com.scenekey.util.CircleTransform;
@@ -42,40 +42,37 @@ import java.util.Arrays;
 
 public abstract class ProfilePopUp_Notification extends Dialog implements View.OnClickListener, DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
 
+    private static final int maxsize = 28; //Maximum size of recent grid view
+    public ArrayList<String> list;
     private HomeActivity activity;
     private Context context;
-
     private RecyclerView rclv_emoji;
-
     private int maxNudes;
-
     private ArrayList<String> getlist;
-    public ArrayList<String> list;
-
     private LinearLayout lr_send_nudge ,lr_get_ndge,lr_indicator,linLayEmoji;
     private ImageView iv_delete ,img_cross,iv_indicator,lastSelected , profileImg;
-
     private TextView tv_nudge,txt_send ,tv_userName;
-
     private SharedPreferences preferences ;
     private String[] recent ;
-
     private NotificationData data;
     private int lastFillPosition;
     private boolean isLastFilled,isClicked;
-    private static final int maxsize = 28 ; //Maximum size of recent grid view
+    private int currentImage;
+    private AWSImage awsImage;
 
-    protected ProfilePopUp_Notification(@NonNull Activity activity, int maxNudes, NotificationData nudge) {
+    protected ProfilePopUp_Notification(@NonNull final Activity activity, final AWSImage awsImage, int maxNudes, final NotificationData nudge) {
         super(activity, android.R.style.Theme_Translucent);
 
         this.context=activity;
         this.activity= (HomeActivity) activity;
+        this.awsImage = awsImage;
 
         View pop_up_view = LayoutInflater.from(context).inflate(R.layout.popup_nudge_n_notificaiton, null);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(pop_up_view);
         this.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
         this.setCanceledOnTouchOutside(false);
+
 
         LinearLayout llMain =  pop_up_view.findViewById(R.id.llMain);
         rclv_emoji =  pop_up_view.findViewById(R.id.rclv_emoji);
@@ -86,6 +83,8 @@ public abstract class ProfilePopUp_Notification extends Dialog implements View.O
         ImageView iv_delete = pop_up_view.findViewById(R.id.iv_delete);
         iv_indicator =  pop_up_view.findViewById(R.id.iv_indicator);
         ImageView img_cross = pop_up_view.findViewById(R.id.img_cross);
+        final ImageView img_left = pop_up_view.findViewById(R.id.img_left);
+        final ImageView img_right = pop_up_view.findViewById(R.id.img_right);
         ImageView zero = pop_up_view.findViewById(R.id.zero);
         ImageView one = pop_up_view.findViewById(R.id.one);
         ImageView two = pop_up_view.findViewById(R.id.two);
@@ -101,7 +100,7 @@ public abstract class ProfilePopUp_Notification extends Dialog implements View.O
         String name=nudge.username.split("\\s+")[0];
 
         tv_bio.setText(nudge.bio);
-        Picasso.with(context).load(nudge.getUserImage()).transform(new CircleTransform()).into(profileImg);
+        Picasso.with(context).load(nudge.getUserImage()).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(profileImg);
 
 
         txt_send.setText("Nudge "+name);
@@ -123,8 +122,8 @@ public abstract class ProfilePopUp_Notification extends Dialog implements View.O
         getlist = new ArrayList<>();
 
         setClicks(llMain,txt_send, iv_delete, img_cross,tv_nudge, one, two, three, four, five, zero,
-                pop_up_view.findViewById(R.id.img_left),
-                pop_up_view.findViewById(R.id.img_right));
+                img_left,
+                img_right);
 
         this.setOnShowListener(this);
         String[] ar = nudge.nudges.split(",");
@@ -138,6 +137,17 @@ public abstract class ProfilePopUp_Notification extends Dialog implements View.O
         this.setOnDismissListener(this);
         this.data = nudge;
         updateImageView(one);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((HomeActivity) activity).dismissProgDialog();
+                if (awsImage.imageList.size() > 1) {
+                    img_left.setVisibility(View.VISIBLE);
+                    img_right.setVisibility(View.VISIBLE);
+                }
+            }
+        }, 4000);
     }
 
     private void setClicks(View... views){
@@ -258,10 +268,12 @@ public abstract class ProfilePopUp_Notification extends Dialog implements View.O
                 }
                 break;
             case R.id.img_right:
-                onNextClick((ImageView) v,this);
+                setUserImage(true);
+                // onNextClick((ImageView) v,this);
                 break;
             case R.id.img_left:
-                onPrevClick((ImageView) v,this);
+                setUserImage(false);
+                // onPrevClick((ImageView) v,this);
                 break;
         }
 
@@ -296,6 +308,13 @@ public abstract class ProfilePopUp_Notification extends Dialog implements View.O
         }
     }
 
+
+    private void setUserImage(boolean isRight) {
+        if (awsImage.imageList.size() != 0) {
+            currentImage = (isRight ? (currentImage == awsImage.imageList.size() - 1 ? 0 : currentImage + 1) : (currentImage == 0 ? awsImage.imageList.size() - 1 : currentImage - 1));
+            Picasso.with(activity).load(awsImage.imageList.get(currentImage).path).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(profileImg);
+        }
+    }
 
     @Override
     public void onShow(DialogInterface dialog) {

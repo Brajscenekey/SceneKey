@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_scenePage"
     android:orientation="vertical">
 
@@ -23,8 +23,8 @@
             app:bottom_swipe_detect="true"
             app:max_visible="0"
             app:rotation_degrees="15.5"
-            tools:context="com.scenekey.activity.HomeActivity"
-            app:top_swipe_detect="true">
+            app:top_swipe_detect="true"
+            tools:context="com.scenekey.activity.HomeActivity">
 
 
         </com.scenekey.lib_sources.SwipeCard.SwipeCardView>
@@ -42,12 +42,12 @@
             android:id="@+id/img_f10_back"
             android:layout_width="@dimen/top_bar_profile"
             android:layout_height="@dimen/top_bar_profile"
-            android:paddingTop="@dimen/_10sdp"
-            android:paddingBottom="@dimen/_10sdp"
-            android:paddingLeft="@dimen/_10sdp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@null"
+            android:paddingBottom="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingTop="@dimen/_10sdp"
             android:scaleType="fitCenter"
             android:src="@drawable/left_arrow_shape"
             android:visibility="visible" />
@@ -60,43 +60,43 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/bg_gradient_white"
             android:orientation="horizontal"
-            android:paddingRight="@dimen/_30sdp"
-            android:paddingLeft="@dimen/_5sdp">
+            android:paddingLeft="@dimen/_5sdp"
+            android:paddingRight="@dimen/_30sdp">
 
             <TextView
                 android:id="@+id/txt_event_name"
-                android:textColor="@color/black2"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_35sdp"
-                android:maxWidth="@dimen/_230sdp"
-                android:singleLine="true"
-                android:fontFamily="@font/montserrat_medium"
-                android:textSize="@dimen/_15sdp"
-                android:gravity="center_vertical"
                 android:layout_marginTop="@dimen/_12sdp"
                 android:ellipsize="marquee"
-                android:text="@string/sample_event" />
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center_vertical"
+                android:maxWidth="@dimen/_230sdp"
+                android:singleLine="true"
+                android:text="@string/sample_event"
+                android:textColor="@color/black2"
+                android:textSize="@dimen/_15sdp" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/img_infoget_f2"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginTop="@dimen/_14sdp"
-                android:scaleType="fitCenter"
-                android:padding="@dimen/_2sdp"
-                android:layout_toRightOf="@id/txt_event_name"
                 android:layout_marginLeft="@dimen/_3sdp"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:layout_toRightOf="@id/txt_event_name"
+                android:padding="@dimen/_2sdp"
+                android:scaleType="fitCenter"
                 fab:srcCompat="@drawable/ic_information" />
 
             <TextView
                 android:id="@+id/txt_calender_i1"
-                android:textColor="@color/black50p"
                 android:layout_width="wrap_content"
-                android:textSize="@dimen/_10sdp"
-                android:fontFamily="@font/raleway_regular"
                 android:layout_height="@dimen/_22sdp"
-                android:gravity="center_vertical"
                 android:layout_alignParentBottom="true"
+                android:fontFamily="@font/raleway_regular"
+                android:gravity="center_vertical"
+                android:textColor="@color/black50p"
+                android:textSize="@dimen/_10sdp"
                 />
         </RelativeLayout>
 
@@ -105,11 +105,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/black80p"
+            android:fontFamily="@font/franklin_gothic_reg"
+            android:gravity="center_horizontal"
             android:paddingTop="@dimen/_18sdp"
             android:text="@string/PTBS"
-            android:fontFamily="@font/franklin_gothic_reg"
             android:textColor="@color/white"
-            android:gravity="center_horizontal"
             android:textSize="@dimen/_16ssp"
             android:visibility="gone" />
 
@@ -137,7 +137,8 @@
             fab:menu_colorRipple="@color/transparent"
             fab:menu_fab_size="normal"
             fab:menu_labels_ellipsize="start"
-            fab:menu_labels_position="left">
+            fab:menu_labels_position="left"
+            tools:context=".activity.HomeActivity">
 
             <com.scenekey.lib_sources.Floting_menuAction.FloatingActionButton
                 android:id="@+id/fabMenu1_like"
@@ -188,8 +189,8 @@
                 android:id="@+id/info_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
 
                 <RelativeLayout
@@ -203,13 +204,13 @@
                         style="@style/txt_event_green_background"
                         android:layout_width="@dimen/_150sdp"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:paddingRight="@dimen/_5sdp"
-                        android:fontFamily="@font/raleway_regular"
                         android:layout_centerHorizontal="true"
-                        android:visibility="visible"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:background="@drawable/bg_tags"
-                        android:text="@string/info" />
+                        android:fontFamily="@font/raleway_regular"
+                        android:paddingRight="@dimen/_5sdp"
+                        android:text="@string/info"
+                        android:visibility="visible" />
 
                     <android.support.v7.widget.AppCompatImageView
                         android:id="@+id/img_edit_i1"
@@ -229,11 +230,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/txt_discrp"
+                        android:layout_marginBottom="@dimen/_5sdp"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:layout_marginRight="@dimen/_5sdp"
-                        android:numColumns="3"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:layout_marginTop="@dimen/_5sdp"/>
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:numColumns="3" />
 
 
                 </RelativeLayout>
@@ -247,21 +248,21 @@
                         android:id="@+id/image_map"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_125sdp"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:background="@color/white"
                         android:clickable="false"
                         android:padding="@dimen/_2sdp"
-                        android:background="@color/white"
-                        android:layout_margin="@dimen/_5sdp"
                         android:scaleType="centerCrop"
-                        android:visibility="gone"
-                        android:src="@color/bg_scenePage"/>
+                        android:src="@color/bg_scenePage"
+                        android:visibility="gone" />
 
 
                     <com.google.android.gms.maps.MapView
                         android:id="@+id/map_view"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_125sdp"
-                        android:background="@color/white"
                         android:layout_margin="@dimen/_5sdp"
+                        android:background="@color/white"
                         android:padding="@dimen/_5sdp"
                         />
 
@@ -270,14 +271,14 @@
                         android:id="@+id/txt_discipI_f2"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_25sdp"
-                        android:layout_margin="@dimen/_5sdp"
                         android:layout_gravity="bottom|center"
+                        android:layout_margin="@dimen/_5sdp"
                         android:background="@color/white80p"
-                        android:gravity="center"
                         android:fontFamily="@font/raleway_regular"
+                        android:gravity="center"
                         android:padding="@dimen/_3sdp"
-                        android:textSize="@dimen/_8sdp"
-                        android:textColor="@color/txt_discrip" />
+                        android:textColor="@color/txt_discrip"
+                        android:textSize="@dimen/_8sdp" />
                 </FrameLayout>
 
             </LinearLayout>
@@ -288,47 +289,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rtlv2_animate_f2"
-                android:minHeight="@dimen/_120sdp"
                 android:layout_marginLeft="@dimen/_25sdp"
                 android:layout_marginRight="@dimen/_25sdp"
                 android:layout_marginTop="@dimen/_50sdp"
+                android:minHeight="@dimen/_120sdp"
                 android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_100sdp"
-                    android:src="@drawable/logo_bg"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/logo_bg" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway_regular"
+                    android:gravity="center"
+                    android:text="@string/no_one"
                     android:textColor="@color/txt_no_one"
                     android:textSize="@dimen/_12sdp"
-android:fontFamily="@font/raleway_regular"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    android:text="@string/no_one"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/txt_not_started"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/txt_no_one"
                     android:fontFamily="@font/raleway_regular"
-
-                    android:textSize="@dimen/_12sdp"
                     android:gravity="center"
-                    android:visibility="gone"
-                    android:text="@string/not_start"/>
+
+                    android:text="@string/not_start"
+                    android:textColor="@color/txt_no_one"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone" />
                 <TextView
                     android:layout_width="@dimen/_300sdp"
                     android:layout_height="@dimen/_50sdp"
                     android:fontFamily="@font/raleway_regular"
 
+                    android:gravity="center"
                     android:textColor="@color/txt_no_one"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="gone"
-                    android:gravity="center"
                     />
             </LinearLayout>
 
@@ -356,12 +357,12 @@ android:fontFamily="@font/raleway_regular"
                     style="@style/txt_event_green_background"
                     android:layout_width="@dimen/_150sdp"
                     android:layout_height="@dimen/_30sdp"
+                    android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:fontFamily="@font/raleway_regular"
                     android:background="@drawable/bg_tags"
+                    android:fontFamily="@font/raleway_regular"
                     android:paddingRight="@dimen/_5sdp"
-                    android:layout_centerHorizontal="true"
                     android:text="@string/TheRoom" />
 
                 <ImageView
@@ -413,17 +414,17 @@ android:fontFamily="@font/raleway_regular"
             android:id="@+id/demo_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/try_demo_image_"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/try_demo_image_" />
         <TextView
             android:id="@+id/btn_got_it"
             android:layout_width="@dimen/_150sdp"
             android:layout_height="@dimen/_30sdp"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/_65sdp"
-            android:fontFamily="@font/franklin_gothic_reg"
-            android:background="@drawable/transparent"/>
+            android:background="@drawable/transparent"
+            android:fontFamily="@font/franklin_gothic_reg" />
     </RelativeLayout>
 
 

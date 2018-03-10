@@ -35,6 +35,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -54,6 +55,7 @@ import com.scenekey.R;
 import com.scenekey.activity.HomeActivity;
 import com.scenekey.adapter.DataAdapter;
 import com.scenekey.adapter.GridChipsAdapter;
+import com.scenekey.aws_service.AWSImage;
 import com.scenekey.cropper.CropImage;
 import com.scenekey.cropper.CropImageView;
 import com.scenekey.cus_view.Grid_multiRow;
@@ -135,6 +137,8 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     private GoogleMap googleMap;
 
     private ProfilePopUp_Notification popup;
+    private AWSImage awsImage;
+    private CognitoCredentialsProvider credentialsProvider;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -175,6 +179,18 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         demoView = view.findViewById(R.id.demoView);
         btn_got_it = view.findViewById(R.id.btn_got_it);
 
+
+        activity.setBBVisibility(View.GONE, TAG);
+        activity.hideStatusBar();
+
+        txt_discipI_f2.setText(event.getVenue().getAddress());
+
+        //keypoint decrement if event distance is more than 100m
+        int distance = activity.getDistance(new Double[]{latitude, longitude, Double.valueOf(currentLatLng[0]), Double.valueOf(currentLatLng[1])});
+        if (distance > Constant.MAXIMUM_DISTANCE) {
+            activity.keyPointsUpdate();
+        }
+
         menu_blue.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
@@ -194,12 +210,10 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                     }
                 }
             }
+
         });
 
-        activity.setBBVisibility(View.GONE,TAG);
-        activity.hideStatusBar();
 
-        txt_discipI_f2.setText(event.getVenue().getAddress());
         return view;
     }
 
@@ -235,7 +249,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         // rclv_grid.hasFixedSize();
         txt_event_name.setText("");
 
-        setOnClick(img_edit_i1,
+        setOnClick(img_edit_i1, menu_blue,
                 btn_got_it,
                 image_map,
                 scrl_all,
@@ -252,6 +266,8 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
 
         cardsList = new ArrayList<>();
         info_view.setVisibility(View.GONE);
+
+        awsImage = new AWSImage(activity);
 
         new Handler().post(new Runnable() {
             @Override
@@ -413,6 +429,10 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
             case R.id.txt_hide_all_one:
                 menu_blue.close(true);
                 break;
+
+            case R.id.menu_blue:
+
+                break;
             case R.id.img_notif:
                 activity.hideStatusBar();
                 canGetNotification = true;
@@ -449,10 +469,24 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         }
     }
 
+    public boolean keyInEventCheck() {
+        boolean b = false;
+        try {
+            b = !(activity.getDistance(new Double[]{latitude, longitude, Double.valueOf(currentLatLng[0]), Double.valueOf(currentLatLng[1])}) <= Constant.MAXIMUM_DISTANCE && activity.checkWithTime(eventDetails.getProfile_rating().getEvent_date(), Double.parseDouble(eventDetails.getProfile_rating().getInterval())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return b;
+    }
+
+    public void keyInPopUp() {
+        utility.showCustomPopup(getString(R.string.enotat), String.valueOf(R.font.arial_regular));
+    }
+
     /***
      * For getting the nudge at notification popUp and show on it
      */
-   private void getNudges() {
+    private void getNudges() {
         canGetNotification = false;
 
         if (utility.checkInternetConnection()) {
@@ -501,7 +535,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                 public void onErrorResponse(VolleyError e) {
                     utility.volleyErrorListner(e);
                     activity.dismissProgDialog();
-                   canGetNotification=true;
+                    canGetNotification = true;
                 }
             }) {
                 @Override
@@ -1079,13 +1113,13 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
 
                 if (imageUri!=null){
                     // final Bitmap eventImg = (Bitmap) data.getExtras().get("data");
-                  //  Bitmap eventImg = ImageUtil.decodeFile(ImageUtil.getRealPathFromUri(getContext(), imageUri));
+                    //  Bitmap eventImg = ImageUtil.decodeFile(ImageUtil.getRealPathFromUri(getContext(), imageUri));
                     //   ((ImageView)this.getView().findViewById(R.id.iv_test)).setImageBitmap(eventImg);
 
                     CropImage.activity(imageUri).setCropShape(CropImageView.CropShape.RECTANGLE).setMinCropResultSize(160,160).setMaxCropResultSize(4000,3500).setAspectRatio(400, 300).start(context,this);
 
                 }else{
-                  Utility.showToast(context,getString(R.string.somethingwentwrong),0);
+                    Utility.showToast(context, getString(R.string.somethingwentwrong), 0);
                 }
 
             }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -1093,7 +1127,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                 CropImage.ActivityResult result= CropImage.getActivityResult(data);
                 try {
                     if (result != null) {
-                      Bitmap  eventImg = MediaStore.Images.Media.getBitmap(context.getContentResolver(), result.getUri());
+                        Bitmap eventImg = MediaStore.Images.Media.getBitmap(context.getContentResolver(), result.getUri());
                         if (eventDetails.getProfile_rating().getKey_in().equals(Constant.KEY_NOTEXIST))
                             addUserIntoEvent(1, eventImg);
                         else sendPicture(eventImg);
@@ -1255,7 +1289,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         if (rclv_grid.getLayoutManager() == null)
             rclv_grid.setLayoutManager(new GridLayoutManager(activity, 3));
         if (rclv_grid.getAdapter() == null) {
-            DataAdapter dataAdapter = new DataAdapter(activity, list, new String[]{eventId, userInfo().userID}, this);
+            DataAdapter dataAdapter = new DataAdapter(activity, awsImage, list, new String[]{eventId, userInfo().userID}, this);
             rclv_grid.setAdapter(dataAdapter);
         } else {
             rclv_grid.getAdapter().notifyDataSetChanged();
@@ -1341,7 +1375,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                     utility.volleyErrorListner(e);
                     activity.dismissProgDialog();
                     if(dialog!=null)dialog.dismiss();
-                   Utility.showToast(getContext(),getString(R.string.somethingwentwrong),0);
+                    Utility.showToast(getContext(), getString(R.string.somethingwentwrong), 0);
                 }
             }) {
                 @Override
@@ -1397,9 +1431,12 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     }
 
     public void popupNotification_New(){
+        activity.showProgDialog(false, TAG);
+        NotificationData nudge = nudgeList.get(nudgeList.size() - 1);
+        awsImage.downloadFileFromS3(awsImage.getFacebookId(nudge.facebook_id, nudge.user_id), (credentialsProvider == null ? credentialsProvider = awsImage.getCredentials() : credentialsProvider));
         currentNudge = 0;
         isPopUpShowing = true;
-        popup =  new ProfilePopUp_Notification(activity, 4, nudgeList.get(nudgeList.size()-1)) {
+        popup = new ProfilePopUp_Notification(activity, awsImage, 4, nudge) {
             @Override
             public void onClickView(TextView textView, ProfilePopUp_Notification profilePopUp) {
                 profilePopUp.setText(textView.getText().toString());

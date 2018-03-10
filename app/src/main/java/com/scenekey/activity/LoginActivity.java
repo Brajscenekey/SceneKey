@@ -12,10 +12,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -320,13 +320,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }) {
                 @Override
                 protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
 
                     params.put("userEmail", email);
                     params.put("password", password);
-                    params.put("userDeviceId", "");
+                    params.put("userDeviceId", FirebaseInstanceId.getInstance().getToken());
                     params.put("deviceType", "");
 
+                    Utility.e("Login params", params.toString());
                     return params;
                 }
             };
@@ -591,7 +592,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void urlToBitmap() {
-        final AWSImage awsImage=new AWSImage(context);
+        final AWSImage awsImage = new AWSImage(this);
 
         String image = sessionManager.getUserInfo().getUserImage();
         if (image != null && !image.equals("")) {

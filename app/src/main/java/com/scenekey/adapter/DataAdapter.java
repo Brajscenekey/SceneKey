@@ -17,28 +17,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amazonaws.auth.CognitoCredentialsProvider;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.facebook.AccessToken;
 import com.scenekey.R;
 import com.scenekey.activity.HomeActivity;
+import com.scenekey.aws_service.AWSImage;
 import com.scenekey.cus_view.ProfilePopUp;
 import com.scenekey.fragment.Event_Fragment;
 import com.scenekey.fragment.Profile_Fragment;
-import com.scenekey.helper.Constant;
 import com.scenekey.helper.WebServices;
 import com.scenekey.model.EventAttendy;
-import com.scenekey.model.ImagesUpload;
 import com.scenekey.util.CircleTransform;
 import com.scenekey.util.SceneKey;
 import com.scenekey.util.Utility;
@@ -50,7 +41,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 //import org.apache.commons.lang3.StringEscapeUtils;
@@ -58,12 +48,12 @@ import java.util.Map;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     private final String TAG = DataAdapter.class.toString();
-    public ArrayList<ImagesUpload> imageList;
+
     private HomeActivity activity;
     private Context context;
     private String data[];
     private ImageView img_p1_profile;
-    private CognitoCredentialsProvider credentialsProvider;
+
     private  Dialog dialog;
     private int currentImage;
     private Event_Fragment fragment;
@@ -71,14 +61,17 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private ArrayList<EventAttendy> roomPersons;
     private int count;
 
+    private AWSImage awsImage;
+    private CognitoCredentialsProvider credentialsProvider;
 
-    public DataAdapter(Activity activity, ArrayList<EventAttendy> list, String[] data, Event_Fragment fragment) {
+
+    public DataAdapter(Activity activity, AWSImage awsImage, ArrayList<EventAttendy> list, String[] data, Event_Fragment fragment) {
         this.roomPersons = list;
         context=activity;
         this.activity = (HomeActivity) activity;
         this.data = data;
         this.fragment = fragment;
-        imageList = new ArrayList<>();
+        this.awsImage = awsImage;
     }
 
     @Override
@@ -125,11 +118,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 if (attendy.userid.equals(activity.userInfo().userID)) {
+                    awsImage.downloadFileFromS3(SceneKey.sessionManager.getFacebookId(), (credentialsProvider == null ? credentialsProvider = awsImage.getCredentials() : credentialsProvider));
                     popUpMy(position );
                 } else {
                     try {
                         if (fragment.check()) {
-                            downloadFileFromS3(attendy.userFacebookId, (credentialsProvider == null ? credentialsProvider = getCredentials() : credentialsProvider));
+                            awsImage.downloadFileFromS3(awsImage.getFacebookId(attendy.userFacebookId, attendy.userid), (credentialsProvider == null ? credentialsProvider = awsImage.getCredentials() : credentialsProvider));
                             newPopUp(attendy, false);
                         }
                             //    popupRoom(position);
@@ -276,8 +270,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         //popupView.setBackgroundColor(0);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-
-        downloadFileFromS3(SceneKey.sessionManager.getFacebookId(), (credentialsProvider == null ? credentialsProvider = getCredentials() : credentialsProvider));
     }
 
     private void setUserStatus(int i, ImageView imageView) {
@@ -348,7 +340,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     private void newPopUp(final EventAttendy obj ,boolean myprofile){
-        new ProfilePopUp(activity, 4, obj, dataAdapter) {
+        activity.showProgDialog(false, TAG);
+        new ProfilePopUp(activity, awsImage, 4, obj) {
             @Override
             public void onClickView(TextView textView, ProfilePopUp profilePopUp ) {
                 profilePopUp.setText(textView.getText().toString());
@@ -367,90 +360,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }.show();
     }
 
-    private void downloadFileFromS3(final String fbId, CognitoCredentialsProvider credentialsProvider) {//, CognitoCachingCredentialsProvider credentialsProvider){
-
-        try {
-            final AmazonS3Client s3Client;
-            s3Client = new AmazonS3Client(credentialsProvider);
-
-            // Set the region of your S3 bucket
-            s3Client.setRegion(Region.getRegion(Regions.US_WEST_1));
-            Thread thread = new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        ObjectListing listing = s3Client.listObjects("scenekey-profile-images", fbId);
-                        List<S3ObjectSummary> summaries = listing.getObjectSummaries();
-
-
-                        while (listing.isTruncated()) {
-
-                            listing = s3Client.listNextBatchOfObjects (listing);
-                            summaries.addAll (listing.getObjectSummaries());
-
-                        }
-                        updateImages(summaries);
-
-                        Utility.e(TAG, "listing "+ summaries.get(0).getKey()+"no of image "+summaries.size());
-
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                        Utility.e(TAG, "Exception found while listing "+ e);
-                    }
-                }
-            });
-
-            thread.start();
-            activity.dismissProgDialog();
-        }
-        catch (Exception e){
-            Utility.e("AMAZON",e.toString());
-            activity.dismissProgDialog();
-        }
-    }
-
-    private void updateImages(final List<S3ObjectSummary> summaries){
-        imageList.clear();
-        for(S3ObjectSummary obj :summaries ){
-            imageList.add(new ImagesUpload(obj.getKey()));
-        }
-        try{
-            Picasso.with(activity).load(imageList.get(currentImage).path).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(img_p1_profile);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
     private void setImage(boolean isRight){
-        if(imageList.size()!=0){
-            currentImage=(isRight?(currentImage==imageList.size()-1? 0 : currentImage+1):(currentImage==0? imageList.size()-1 :currentImage-1));
-            Picasso.with(activity).load(imageList.get(currentImage).path).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(img_p1_profile);
+        if (awsImage.imageList.size() != 0) {
+            currentImage = (isRight ? (currentImage == awsImage.imageList.size() - 1 ? 0 : currentImage + 1) : (currentImage == 0 ? awsImage.imageList.size() - 1 : currentImage - 1));
+            Picasso.with(activity).load(awsImage.imageList.get(currentImage).path).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(img_p1_profile);
         }
-    }
-
-    private CognitoCredentialsProvider getCredentials(){
-        CognitoCredentialsProvider credentialsProvider = new CognitoCredentialsProvider( "us-west-2:86b58a3e-0dbd-4aad-a4eb-e82b1a4ebd91",Regions.US_WEST_2);
-        AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-        TransferUtility transferUtility = new TransferUtility(s3, context);
-
-        Map<String, String> logins = new HashMap<String, String>();
-
-        String token = "";
-        try {
-            token = AccessToken.getCurrentAccessToken().getToken();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        if (token != null && !token.equals("")) {
-            logins.put("graph.facebook.com", AccessToken.getCurrentAccessToken().getToken());
-        }else {
-            logins.put("graph.facebook.com", Constant.Token);
-        }
-        //Utility.printBigLogcat("Acess " , AccessToken.getCurrentAccessToken().getToken());
-        credentialsProvider.setLogins(logins);
-        return credentialsProvider;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

@@ -23,17 +23,17 @@
             android:id="@+id/linLayProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_20sdp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_userName"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
+                android:fontFamily="@font/montserrat_medium"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_14sdp" />
+                android:textSize="@dimen/_15sdp" />
 
             <ImageView
                 android:id="@+id/img_cross"
@@ -87,7 +87,9 @@
                    android:layout_gravity="center_horizontal"
                    android:layout_marginTop="@dimen/_10sdp"
                    android:fontFamily="@font/raleway_light"
+
                    android:gravity="center"
+                   android:maxLines="2"
                    android:text="Demo bio"
                    android:textColor="@color/white"
                    android:textSize="@dimen/_14ssp" />
@@ -137,6 +139,7 @@
                         android:background="@drawable/circle_white"
                         android:gravity="center"
                         android:textColor="@color/white"
+                        android:theme="@style/et_black_cursor"
                         app:emojiSize="@dimen/nudge_text_size"
                         />
                     <com.vanniktech.emoji.EmojiTextView
@@ -145,6 +148,8 @@
                         android:background="@drawable/circle_white"
                         android:gravity="center"
                         android:textColor="@color/white"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:theme="@style/et_black_cursor"
                         app:emojiSize="@dimen/nudge_text_size"
                         />
                     <com.vanniktech.emoji.EmojiTextView
@@ -199,14 +204,17 @@
                         android:layout_width="@dimen/nudge_"
                         android:layout_height="@dimen/nudge_"
                         android:alpha="1"
-                        android:gravity="center"
+                       android:background="@null"
+                       android:gravity="center"
                        android:textColor="@color/white"
+                       android:theme="@style/et_black_cursor"
                        app:emojiSize="@dimen/nudge_text_size2"
                         />
 
                     <com.vanniktech.emoji.EmojiTextView
                         android:layout_width="@dimen/nudge_"
                         android:layout_height="@dimen/nudge_"
+                        android:background="@null"
                         android:gravity="center"
                         android:textColor="@color/white"
                         app:emojiSize="@dimen/nudge_text_size2"
@@ -214,6 +222,7 @@
                     <com.vanniktech.emoji.EmojiTextView
                         android:layout_width="@dimen/nudge_"
                         android:layout_height="@dimen/nudge_"
+                        android:background="@null"
                         android:gravity="center"
                         android:textColor="@color/white"
                         app:emojiSize="@dimen/nudge_text_size2"
@@ -221,6 +230,7 @@
                     <com.vanniktech.emoji.EmojiTextView
                         android:layout_width="@dimen/nudge_"
                         android:layout_height="@dimen/nudge_"
+                        android:background="@null"
                         android:gravity="center"
                         android:textColor="@color/white"
                         app:emojiSize="@dimen/nudge_text_size2"

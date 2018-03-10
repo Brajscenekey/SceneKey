@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -25,7 +26,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,10 +37,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -67,7 +65,6 @@ import com.scenekey.model.UserInfo;
 import com.scenekey.util.SceneKey;
 import com.scenekey.util.StatusBarUtil;
 import com.scenekey.util.Utility;
-import com.scenekey.volleymultipart.VolleyMultipartRequest;
 import com.scenekey.volleymultipart.VolleySingleton;
 import com.squareup.picasso.Picasso;
 
@@ -934,9 +931,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     eventsNearbyList.add(events);
                 }
 
-             /*   if (distance>Constant.MAXIMUM_DISTANCE){
-                    keyStatus(events.getEvent().event_id);
-                }*/
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -999,17 +993,21 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void showProgDialog(boolean b , String TAG) {
-      try {
-          customProgressBar.setCanceledOnTouchOutside(b);
-          customProgressBar.setCancelable(b);
-          customProgressBar.show();
-      }catch (Exception e){
-          e.printStackTrace();
-      }
+        try {
+            customProgressBar.setCanceledOnTouchOutside(b);
+            customProgressBar.setCancelable(b);
+            customProgressBar.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void dismissProgDialog() {
-        if (customProgressBar != null) customProgressBar.dismiss();
+        try {
+            if (customProgressBar != null) customProgressBar.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String[] getLatLng() {
@@ -1048,7 +1046,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public int getDistance(Double[] LL){
-       Utility.e("LAT LONG ", LL[0]+" "+LL[1]+" "+LL[2]+" "+LL[3]  );
+        Utility.e("LAT LONG ", LL[0] + " " + LL[1] + " " + LL[2] + " " + LL[3]);
         Location startPoint=new Location("locationA");
         startPoint.setLatitude(LL[0]);
         startPoint.setLongitude(LL[1]);
@@ -1063,7 +1061,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public double phpDistance(Double[] LL) {
-       Utility.e(TAG, " Distance " + 6371000 * (Math.acos(Math.cos(Math.toRadians(LL[0])) * Math.cos(Math.toRadians(LL[2])) * Math.cos(Math.toRadians(LL[3]) - Math.toRadians(LL[1])) + Math.sin(Math.toRadians(LL[0])) * Math.sin(Math.toRadians(LL[2])))) );
+        Utility.e(TAG, " Distance " + 6371000 * (Math.acos(Math.cos(Math.toRadians(LL[0])) * Math.cos(Math.toRadians(LL[2])) * Math.cos(Math.toRadians(LL[3]) - Math.toRadians(LL[1])) + Math.sin(Math.toRadians(LL[0])) * Math.sin(Math.toRadians(LL[2])))));
         return 6371000 * (Math.acos(Math.cos(Math.toRadians(LL[0])) * Math.cos(Math.toRadians(LL[2])) * Math.cos(Math.toRadians(LL[3]) - Math.toRadians(LL[1])) + Math.sin(Math.toRadians(LL[0])) * Math.sin(Math.toRadians(LL[2]))));
     }
 
@@ -1189,16 +1187,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         View decorView = getWindow().getDecorView();
         if (!(SceneKey.sessionManager.isSoftKey())){
 
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY // hide status bar and nav bar after a short delay, or if the user interacts with the middle of the screen
-        );
-        //decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_IMMERSIVE);
-    }else {
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY // hide status bar and nav bar after a short delay, or if the user interacts with the middle of the screen
+            );
+            //decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_IMMERSIVE);
+        } else {
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -1210,7 +1208,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             );
             //decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-            top_status.setVisibility(View.GONE);
+        top_status.setVisibility(View.GONE);
     }
 
     public void showStatusBar(){
@@ -1341,6 +1339,40 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }.updateKeyPoint((points <= 0 ? 0 : points - 1), userInfo.userID);
     }
 
+    public void keyPointsUpdate() {
+
+        final int points = Integer.parseInt(userInfo.keyPoints);
+        new Aws_Web_Service() {
+            @Override
+            public okhttp3.Response onResponseUpdate(okhttp3.Response response) {
+                if (response == null) return null;
+                try {
+                    String s = response.body().string();
+                    if (new JSONObject(s).getInt("serverStatus") == 2) {
+
+                        userInfo.keyPoints = Integer.parseInt(userInfo.keyPoints) - 1 + "";
+                        updateSession(userInfo);
+
+                        if (userInfo.keyPoints.equals("0")) {
+                            userInfo.keyPoints = 25 + "";
+                            updateSession(userInfo);
+                        }
+                        dismissProgDialog();
+                        //   utility.showCustomPopup(msg, String.valueOf(R.font.arial_regular));
+                        // TSnackbar.make(rl_title_view, "-1 Key Points!", TSnackbar.LENGTH_LONG).show();
+                        showKeyPoints("-1 Key Points!");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return response;
+            }
+        }.updateKeyPoint((points <= 0 ? 0 : points - 1), userInfo.userID);
+
+    }
+
     public void showCustomPopup(String message, String fontType, final int call) {
         final Dialog dialog = new Dialog(context);
         dialog.setCanceledOnTouchOutside(false);
@@ -1356,16 +1388,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         tvPopupOk.setText(R.string.ok);
         tvMessages.setText(message);
 
-        tvPopupOk.setOnClickListener(new View.OnClickListener() {
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onClick(View view) {
-                // Show location settings when the user acknowledges the alert dialog
-                dialog.cancel();
+            public void onDismiss(DialogInterface dialog) {
                 if (call == 1) {
                     incrementKeyPoints(getString(R.string.kp_like));
                 } else {
                     decrementKeyPoints(getString(R.string.kp_unlike));
                 }
+            }
+        });
+
+        tvPopupOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Show location settings when the user acknowledges the alert dialog
+                dialog.cancel();
 
             }
         });
@@ -1452,93 +1490,5 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void keyStatus(final String event_id){
-
-        if (utility.checkInternetConnection()) {
-
-            VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, WebServices.DEFAULT_IMAGE, new Response.Listener<NetworkResponse>() {
-                @Override
-                public void onResponse(NetworkResponse response) {
-                    String data = new String(response.data);
-                    Log.e("Response", data);
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(data);
-                        String status = jsonObject.getString("status");
-
-                        if (status.equals("not exist")) {
-                             statusKey = false;
-                            keyPointsUpdate();
-                        }else {
-                            statusKey=true;
-                            keyPointsUpdate();
-                        }
-
-                    } catch (Throwable t) {
-                        Log.e("My App", "Could not parse malformed JSON: \"" + response + "\"");
-                        dismissProgDialog();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    NetworkResponse networkResponse = error.networkResponse;
-                    Log.i("Error", networkResponse + "");
-                    Utility.showToast(context, networkResponse + "", Toast.LENGTH_SHORT);
-                    dismissProgDialog();
-                    error.printStackTrace();
-                }
-            }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-
-                    params.put("userid", userInfo.userID);
-                    params.put("eventid", event_id);
-
-                    return params;
-                }
-            };
-
-            multipartRequest.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            VolleySingleton.getInstance(this).addToRequestQueue(multipartRequest);
-        } else {
-           Utility.showToast(context, getString(R.string.internetConnectivityError), Toast.LENGTH_SHORT);
-        }
-    }
-
-    private void keyPointsUpdate(){
-
-        final int points = Integer.parseInt(userInfo.keyPoints);
-        new Aws_Web_Service() {
-            @Override
-            public okhttp3.Response onResponseUpdate(okhttp3.Response response) {
-                if (response == null) return null;
-                try {
-                    String s = response.body().string();
-                    if (new JSONObject(s).getInt("serverStatus") == 2) {
-
-                        userInfo.keyPoints = Integer.parseInt(userInfo.keyPoints) - 1 + "";
-                        updateSession(userInfo);
-
-                        if (userInfo.keyPoints.equals("0")) {
-                            userInfo.keyPoints = 25 + "";
-                            updateSession(userInfo);
-                        }
-                        dismissProgDialog();
-                        //   utility.showCustomPopup(msg, String.valueOf(R.font.arial_regular));
-                        // TSnackbar.make(rl_title_view, "-1 Key Points!", TSnackbar.LENGTH_LONG).show();
-                        showKeyPoints("-1 Key Points!");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return response;
-            }
-        }.updateKeyPoint((points <= 0 ? 0 : points - 1), userInfo.userID);
-
-    }
 
 }

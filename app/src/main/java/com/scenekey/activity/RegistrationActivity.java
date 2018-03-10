@@ -34,6 +34,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.scenekey.R;
 import com.scenekey.aws_service.AWSImage;
 import com.scenekey.helper.Constant;
@@ -332,7 +333,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                             userInfo.bio= userDetail.getString("bio");
 
                             sessionManager.createSession(userInfo);
-                            AWSImage awsImage=new AWSImage(context);
+                            AWSImage awsImage = new AWSImage(RegistrationActivity.this);
                             try{
                                 if (profileImageBitmap!=null) {
                                     awsImage.initItem(profileImageBitmap);
@@ -387,6 +388,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     params.put("longi", String.valueOf(longitude));
                     params.put("password", pwd);
                     params.put("socialType", "");
+                    params.put("userDeviceId", FirebaseInstanceId.getInstance().getToken());
                     params.put("stagename", "");
                     params.put("userEmail", email);
                     params.put("userFacebookId", "");

@@ -110,7 +110,6 @@ public class BioActivity extends AppCompatActivity implements View.OnClickListen
 
     }
 
-
     private void showProgDialog(boolean cancelable){
         prog.setCancelable(cancelable);
         prog.setCanceledOnTouchOutside(cancelable);

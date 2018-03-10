@@ -19,10 +19,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.scenekey.R;
 import com.scenekey.activity.HomeActivity;
-import com.scenekey.adapter.DataAdapter;
 import com.scenekey.adapter.EmojiAdapter;
+import com.scenekey.aws_service.AWSImage;
 import com.scenekey.helper.Constant;
 import com.scenekey.model.EventAttendy;
 import com.scenekey.util.CircleTransform;
@@ -43,28 +44,32 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
     private HomeActivity activity;
     private Context context;
     private RecyclerView rclv_emoji;
-    private ImageView lastSelected, iv_indicator, profileimg;
+    private ImageView lastSelected, iv_indicator, profileImg;
     private  TextView txt_send;
     private LinearLayout lr_send_nudge,lr_indicator;
-    private int maxNudes,lastFillposition;
+    private int maxNudes, lastFillPosition;
     private SharedPreferences preferences ;
     private String[] recent ;
     private int currentImage;
-    private DataAdapter dataAdapter;
     private boolean isLastFilled,isClicked;
 
-    protected ProfilePopUp(@NonNull Activity activity, int maxNudes, EventAttendy obj, final DataAdapter dataAdapter) {
+    private AWSImage awsImage;
+    private CognitoCredentialsProvider credentialsProvider;
+
+    protected ProfilePopUp(@NonNull final Activity activity, final AWSImage awsImage, int maxNudes, final EventAttendy obj) {
         super(activity, android.R.style.Theme_Translucent);
 
         this.activity= (HomeActivity) activity;
         this.context=activity;
-        this.dataAdapter = dataAdapter;
+        this.awsImage = awsImage;
+
 
         View pop_up_view = LayoutInflater.from(context).inflate(R.layout.popup_nudge_n_notificaiton, null);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(pop_up_view);
         this.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
         this.setCanceledOnTouchOutside(false);
+
 
         rclv_emoji =  pop_up_view.findViewById(R.id.rclv_emoji);
         lr_send_nudge =  pop_up_view.findViewById(R.id.lr_send_nudge);
@@ -76,7 +81,7 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
         final ImageView img_right = pop_up_view.findViewById(R.id.img_right);
         iv_indicator =  pop_up_view.findViewById(R.id.iv_indicator);
         ImageView img_cross = pop_up_view.findViewById(R.id.img_cross);
-        profileimg = pop_up_view.findViewById(R.id.img_profile_pic2);
+        profileImg = pop_up_view.findViewById(R.id.img_profile_pic2);
         ImageView zero = pop_up_view.findViewById(R.id.zero);
         ImageView one = pop_up_view.findViewById(R.id.one);
         ImageView two = pop_up_view.findViewById(R.id.two);
@@ -84,6 +89,7 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
         ImageView four = pop_up_view.findViewById(R.id.four);
         ImageView five = pop_up_view.findViewById(R.id.five);
         txt_send = pop_up_view.findViewById(R.id.txt_send);
+
 
         tv_bio.setText(obj.bio);
         GridLayoutManager layoutManager = new GridLayoutManager(context,4, LinearLayoutManager.HORIZONTAL,false);
@@ -101,7 +107,7 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
         ((TextView) pop_up_view.findViewById(R.id.tv_userName)).setText(obj.username);
         try {
 
-            Picasso.with(context).load(obj.getUserimage()).transform(new CircleTransform()).into(profileimg);
+            Picasso.with(context).load(obj.getUserimage()).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(profileImg);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -111,12 +117,13 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (dataAdapter.imageList.size() > 0) {
+                ((HomeActivity) activity).dismissProgDialog();
+                if (awsImage.imageList.size() > 1) {
                     img_left.setVisibility(View.VISIBLE);
                     img_right.setVisibility(View.VISIBLE);
                 }
             }
-        }, 2000);
+        }, 4000);
     }
 
     private void setClicks(View... views){
@@ -233,9 +240,9 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
     }
 
     private void setUserImage(boolean isRight) {
-        if (dataAdapter.imageList.size() != 0) {
-            currentImage = (isRight ? (currentImage == dataAdapter.imageList.size() - 1 ? 0 : currentImage + 1) : (currentImage == 0 ? dataAdapter.imageList.size() - 1 : currentImage - 1));
-            Picasso.with(activity).load(dataAdapter.imageList.get(currentImage).path).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(profileimg);
+        if (awsImage.imageList.size() != 0) {
+            currentImage = (isRight ? (currentImage == awsImage.imageList.size() - 1 ? 0 : currentImage + 1) : (currentImage == 0 ? awsImage.imageList.size() - 1 : currentImage - 1));
+            Picasso.with(activity).load(awsImage.imageList.get(currentImage).path).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(profileImg);
         }
     }
 
@@ -244,7 +251,6 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
             int position = list.size()-1;
             list.remove(position);
             ((EmojiTextView)lr_send_nudge.getChildAt(position)).setText("");
-
         }
     }
 
@@ -282,7 +288,7 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
         for(String txt :s.substring(1,s.length()-1).split(",")){
             ar[i] = txt.replace("null","").trim();
             if(txt.trim().isEmpty() && !isLastFilled) {
-                lastFillposition = i;
+                lastFillPosition = i;
                 isLastFilled = true;
             }
             i++;
@@ -296,18 +302,18 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
             @Override
             protected Void doInBackground(Void... params) {
                 preferences = context.getSharedPreferences(Constant.PREF_EMOJI, Context.MODE_PRIVATE);
-                if(lastFillposition<maxsize){
+                if (lastFillPosition < maxsize) {
                     if(canAddtoList(text))
                     {
-                        recent[lastFillposition] = text.trim();
-                        lastFillposition ++;
+                        recent[lastFillPosition] = text.trim();
+                        lastFillPosition++;
                     }
                 }
                 else {
                     if(canAddtoList(text))
                     {
                     recent[0]= text.trim();
-                    lastFillposition = 1;
+                        lastFillPosition = 1;
                     }
                 }
                 {

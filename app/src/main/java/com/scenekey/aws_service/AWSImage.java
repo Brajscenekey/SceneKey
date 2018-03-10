@@ -1,6 +1,6 @@
 package com.scenekey.aws_service;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
@@ -15,6 +15,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -26,8 +28,10 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
+import com.scenekey.activity.HomeActivity;
 import com.scenekey.helper.Constant;
 import com.scenekey.helper.WebServices;
+import com.scenekey.model.ImagesUpload;
 import com.scenekey.model.UserInfo;
 import com.scenekey.util.SceneKey;
 import com.scenekey.util.Utility;
@@ -37,7 +41,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -48,12 +54,15 @@ import java.util.UUID;
 
 public class AWSImage {
 
-    private Context context;
+    public ArrayList<ImagesUpload> imageList;
+    private String TAG = "AWSImage";
+    private Activity activity;
     private CognitoCredentialsProvider credentialsProvider;
     private String imageKey;
 
-    public AWSImage(Context context){
-        this.context=context;
+    public AWSImage(Activity activity) {
+        this.activity = activity;
+        if (imageList == null) imageList = new ArrayList<>();
     }
 
     public void initItem(Bitmap bitmap){
@@ -93,7 +102,7 @@ public class AWSImage {
 
         // Set the region of your S3 bucket
         s3Client.setRegion(Region.getRegion(Regions.US_WEST_1));
-        TransferUtility transferUtility = new TransferUtility(s3Client, context);
+        TransferUtility transferUtility = new TransferUtility(s3Client, activity);
         // String  key1 = fbid+"-"+ System.currentTimeMillis()+".jpg";
 
         final String  key1 = fbid+".jpg";
@@ -137,10 +146,10 @@ public class AWSImage {
         });
     }
 
-    private CognitoCredentialsProvider getCredentials(){
+    public CognitoCredentialsProvider getCredentials() {
         CognitoCredentialsProvider credentialsProvider = new CognitoCredentialsProvider( "us-west-2:86b58a3e-0dbd-4aad-a4eb-e82b1a4ebd91",Regions.US_WEST_2);
         AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-        TransferUtility transferUtility = new TransferUtility(s3, context);
+        TransferUtility transferUtility = new TransferUtility(s3, activity);
 
         Map<String, String> logins = new HashMap<String, String>();
 
@@ -164,7 +173,7 @@ public class AWSImage {
     private void setDefaultImageOnServer(final String key, final String s) {
 
         try {
-            RequestQueue requestQueue = Volley.newRequestQueue(context);
+            RequestQueue requestQueue = Volley.newRequestQueue(activity);
 
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("method","PUT");
@@ -227,6 +236,62 @@ public class AWSImage {
         }
     }
 
+    public void downloadFileFromS3(final String fbId, CognitoCredentialsProvider credentialsProvider) {//, CognitoCachingCredentialsProvider credentialsProvider){
 
+        try {
+            final AmazonS3Client s3Client;
+            s3Client = new AmazonS3Client(credentialsProvider);
 
+            // Set the region of your S3 bucket
+            s3Client.setRegion(Region.getRegion(Regions.US_WEST_1));
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ObjectListing listing = s3Client.listObjects("scenekey-profile-images", fbId);
+                        List<S3ObjectSummary> summaries = listing.getObjectSummaries();
+
+                        imageList.clear();
+
+                        while (listing.isTruncated()) {
+
+                            listing = s3Client.listNextBatchOfObjects(listing);
+                            summaries.addAll(listing.getObjectSummaries());
+
+                        }
+
+                        updateImages(summaries);
+
+                        Utility.e(TAG, "listing " + summaries.get(0).getKey() + "no of image " + summaries.size());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        ((HomeActivity) activity).dismissProgDialog();
+                        Utility.e(TAG, "Exception found while listing " + e);
+                    }
+                }
+            });
+
+            thread.start();
+
+        } catch (Exception e) {
+            Utility.e("AMAZON", e.toString());
+            ((HomeActivity) activity).dismissProgDialog();
+        }
+    }
+
+    private void updateImages(final List<S3ObjectSummary> summaries) {
+        if (imageList == null) imageList = new ArrayList<>();
+        for (S3ObjectSummary obj : summaries) {
+            imageList.add(new ImagesUpload(obj.getKey()));
+        }
+    }
+
+    public String getFacebookId(String userFacebookId, String userid) {
+        String s = userFacebookId;
+        if (s.equals("")) {
+            s = userid;
+        }
+        return s;
+    }
 }

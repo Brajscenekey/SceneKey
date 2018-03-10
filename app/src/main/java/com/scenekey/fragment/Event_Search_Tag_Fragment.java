@@ -164,6 +164,8 @@ public class Event_Search_Tag_Fragment extends Fragment implements View.OnClickL
                         }
                         if (list_events.size() <= 0) {
                             Utility.showToast(context, "No Event found near your location", 0);
+                        } else {
+                            activity.keyPointsUpdate();
                         }
                         setRecyclerViewEvent();
                         activity.dismissProgDialog();
