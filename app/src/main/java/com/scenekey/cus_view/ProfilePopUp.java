@@ -57,7 +57,7 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
     private CognitoCredentialsProvider credentialsProvider;
 
     protected ProfilePopUp(@NonNull final Activity activity, final AWSImage awsImage, int maxNudes, final EventAttendy obj) {
-        super(activity, android.R.style.Theme_Translucent);
+        super(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
         this.activity= (HomeActivity) activity;
         this.context=activity;
@@ -65,6 +65,7 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
 
 
         View pop_up_view = LayoutInflater.from(context).inflate(R.layout.popup_nudge_n_notificaiton, null);
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(pop_up_view);
         this.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation_2;
@@ -124,6 +125,8 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
                 }
             }
         }, 4000);
+
+
     }
 
     private void setClicks(View... views){

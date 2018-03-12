@@ -42,7 +42,7 @@
     <dimen name="dots_margin_bottom">1dp</dimen>
 
 
-    <dimen name="nudge_">@dimen/_33sdp</dimen>
+    <dimen name="nudge_">@dimen/_38sdp</dimen>  <!--_33sdp-->
     <dimen name="nudge_text_size">@dimen/_22sdp</dimen>
     <dimen name="nudge_text_size2">@dimen/_25sdp</dimen>
     <dimen name="nudge_section_padding">@dimen/_4sdp</dimen>

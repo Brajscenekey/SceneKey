@@ -181,7 +181,6 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
 
 
         activity.setBBVisibility(View.GONE, TAG);
-        activity.hideStatusBar();
 
         txt_discipI_f2.setText(event.getVenue().getAddress());
 
@@ -221,6 +220,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        RelativeLayout rlEventFragment = view.findViewById(R.id.rlEventFragment);
         fabMenu1_like = view.findViewById(R.id.fabMenu1_like);
         ImageView img_edit_i1 = view.findViewById(R.id.img_edit_i1);
         fabMenu2_picture = view.findViewById(R.id.fabMenu2_picture);
@@ -249,7 +249,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         // rclv_grid.hasFixedSize();
         txt_event_name.setText("");
 
-        setOnClick(img_edit_i1, menu_blue,
+        setOnClick(rlEventFragment, img_edit_i1, menu_blue,
                 btn_got_it,
                 image_map,
                 scrl_all,
@@ -277,6 +277,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         });
 
         activity.dismissProgDialog();
+        activity.hideStatusBar();
     }
 
     private UserInfo userInfo() {
@@ -358,6 +359,14 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.rlEventFragment:
+                try {
+                    activity.hideStatusBar();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+
             case R.id.img_infoget_f2:
                 try {
                     animateInfo(isInfoVisible);
@@ -470,13 +479,14 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     }
 
     public boolean keyInEventCheck() {
-        boolean b = false;
+        boolean a = false;
+        Utility.e("Event fragment", currentLatLng[0] + " " + currentLatLng[1]);
         try {
-            b = !(activity.getDistance(new Double[]{latitude, longitude, Double.valueOf(currentLatLng[0]), Double.valueOf(currentLatLng[1])}) <= Constant.MAXIMUM_DISTANCE && activity.checkWithTime(eventDetails.getProfile_rating().getEvent_date(), Double.parseDouble(eventDetails.getProfile_rating().getInterval())));
+            a = !(userInfo().makeAdmin.equals(Constant.ADMIN_YES)) | !(activity.getDistance(new Double[]{latitude, longitude, Double.valueOf(currentLatLng[0]), Double.valueOf(currentLatLng[1])}) <= Constant.MAXIMUM_DISTANCE && activity.checkWithTime(eventDetails.getProfile_rating().getEvent_date(), Double.parseDouble(eventDetails.getProfile_rating().getInterval())));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return b;
+        return a;
     }
 
     public void keyInPopUp() {

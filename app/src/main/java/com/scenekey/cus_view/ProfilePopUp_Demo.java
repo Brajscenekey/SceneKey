@@ -39,28 +39,20 @@ import java.util.Arrays;
 
 public abstract class ProfilePopUp_Demo extends Dialog implements View.OnClickListener, DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
 
+    private static final int maxsize = 28; //Maximum size of recent grid view
+    public ArrayList<String> list;
     private HomeActivity activity;
     private Context context;
-
     private RecyclerView rclv_emoji;
-
     private int visibility,maxNudes,lastFillPosition;
     private ArrayList<String> getList;
-    public ArrayList<String> list;
-
     private LinearLayout lr_indicator,lr_send_nudge ,lr_get_ndge,linLayEmoji;
-
     private ImageView iv_indicator,lastSelected,profileImg;
-
     private TextView tv_nudge,txt_send ,tv_userName;
-
     private SharedPreferences preferences ;
     private String [] recent ;
-
     private NotificationData data;
-
     private   boolean isLastFilled;
-    private static final int maxsize = 28 ; //Maximum size of recent grid view
 
     protected ProfilePopUp_Demo(@NonNull Activity activity, int maxNudes, NotificationData nudge, int visibility) {
         super(activity, android.R.style.Theme_Translucent);
@@ -141,7 +133,7 @@ public abstract class ProfilePopUp_Demo extends Dialog implements View.OnClickLi
         this.setOnDismissListener(this);
         this.data = nudge;
         updateImageView(one);
-
+        ((HomeActivity) activity).hideStatusBar();
     }
 
     private void setClicks(View... views){

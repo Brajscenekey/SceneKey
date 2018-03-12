@@ -145,7 +145,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     private void popUpMy(final int position) {
         final ImageView img_red, img_yellow, img_green;
-        dialog = new Dialog(activity, android.R.style.Theme_Translucent);
+
+        dialog = new Dialog(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);   //android.R.style.Theme_Translucent
         final TextView txt_stop, txt_caution, txt_go;
         final TextView txt_title ,txt_my_details;
 
@@ -269,7 +270,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         dialog.show();
         //popupView.setBackgroundColor(0);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
+        activity.hideStatusBar();
     }
 
     private void setUserStatus(int i, ImageView imageView) {

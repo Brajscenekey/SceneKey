@@ -23,7 +23,7 @@ public class Constant {
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
 
-    public static final int MAXIMUM_DISTANCE = 100;
+    public static final int MAXIMUM_DISTANCE = 200;
 
     public static final String ADMIN_YES = "yes";
     public static final String ADMIN_NO = "no";

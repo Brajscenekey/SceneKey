@@ -101,6 +101,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/raleway_regular"
                 android:gravity="center"
@@ -127,7 +129,7 @@
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/img_green"
                     android:layout_width="@dimen/_40sdp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_40sdp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/bg_green_ring" />
 
@@ -136,6 +138,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:fontFamily="@font/franklin_gothic_reg"
                     android:gravity="center"
                     android:text="@string/Go"
@@ -151,7 +154,8 @@
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/img_yellow"
                     android:layout_width="@dimen/_40sdp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_gravity="center"
                     android:scaleType="fitCenter"
                     android:src="@drawable/bg_yellow_ring" />
 
@@ -160,6 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:fontFamily="@font/franklin_gothic_reg"
                     android:gravity="center"
                     android:text="@string/caution"
@@ -176,7 +181,7 @@
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/img_red"
                     android:layout_width="@dimen/_40sdp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_40sdp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/bg_red_ring_2" />
 
@@ -185,6 +190,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:fontFamily="@font/franklin_gothic_reg"
                     android:gravity="center"
                     android:text="@string/stop"
