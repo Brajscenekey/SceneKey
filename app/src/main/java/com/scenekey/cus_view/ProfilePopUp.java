@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.scenekey.R;
 import com.scenekey.activity.HomeActivity;
 import com.scenekey.adapter.EmojiAdapter;
@@ -54,7 +53,6 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
     private boolean isLastFilled,isClicked;
 
     private AWSImage awsImage;
-    private CognitoCredentialsProvider credentialsProvider;
 
     protected ProfilePopUp(@NonNull final Activity activity, final AWSImage awsImage, int maxNudes, final EventAttendy obj) {
         super(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -101,8 +99,9 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
 
         this.maxNudes = maxNudes;
         list = new ArrayList<>();
+
+
         setClicks(llMain, iv_delete, img_cross, one, two, three, four, five, zero, txt_send, img_left, img_right);
-        this.context = context;
         this.setOnShowListener(this);
         getRecentTask();
         ((TextView) pop_up_view.findViewById(R.id.tv_userName)).setText(obj.username);
@@ -155,7 +154,8 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
             list.add(text);
             int i=0;
             for(String str : list){
-                ((EmojiTextView)lr_send_nudge.getChildAt(i)).setText(str.trim());
+                ((EmojiTextView) lr_send_nudge.getChildAt(i)).setText(str.trim());
+
                 i++;
             }
         }
@@ -219,7 +219,6 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
                 txt_send.setClickable(false);
                 if (!isClicked) {
                     try {
-                        activity.hideStatusBar();
                         onSendCLick((TextView) v, this);
                     } catch (NullPointerException e){
                         e.printStackTrace();
@@ -253,7 +252,9 @@ public abstract class ProfilePopUp extends Dialog implements View.OnClickListene
         if(list.size()>0){
             int position = list.size()-1;
             list.remove(position);
-            ((EmojiTextView)lr_send_nudge.getChildAt(position)).setText("");
+
+            ((EmojiTextView) lr_send_nudge.getChildAt(position)).setText("");
+
         }
     }
 

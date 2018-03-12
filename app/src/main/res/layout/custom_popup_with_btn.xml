@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/_250sdp"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
     android:layout_gravity="center"
+    android:animateLayoutChanges="true"
     android:background="@drawable/popup_bg"
     android:orientation="vertical">
 
@@ -14,7 +14,7 @@
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"
         android:layout_marginTop="@dimen/_10sdp"
-        android:fontFamily="@font/raleway_bold"
+        android:fontFamily="@font/montserrat_semibold"
         android:gravity="bottom|center"
         android:textColor="@color/black"
         android:textSize="@dimen/_16sdp"
@@ -25,11 +25,12 @@
         android:id="@+id/tvMessages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:fontFamily="@font/montserrat_regular"
         android:gravity="center"
-        android:fontFamily="@font/raleway_regular"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:paddingStart="@dimen/_30sdp"
-        android:paddingEnd="@dimen/_30sdp"
+        android:paddingLeft="@dimen/_15sdp"
+        android:paddingRight="@dimen/_15sdp"
         android:textColor="@color/black"
         android:textSize="@dimen/_14sdp" />
 
@@ -50,8 +51,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:fontFamily="@font/montserrat_regular"
             android:gravity="center"
-            android:fontFamily="@font/raleway_medium"
             android:text="@string/cancel"
             android:textColor="@color/blue"
             android:textSize="@dimen/_14sdp" />
@@ -66,8 +67,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:fontFamily="@font/montserrat_regular"
             android:gravity="center"
-            android:fontFamily="@font/raleway_medium"
             android:text="@string/try_again"
             android:textColor="@color/blue"
             android:textSize="@dimen/_14sdp" />

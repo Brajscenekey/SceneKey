@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,6 @@ import com.scenekey.model.EventAttendy;
 import com.scenekey.model.NotificationData;
 import com.scenekey.model.RoomPerson;
 import com.scenekey.util.CircleTransform;
-import com.scenekey.util.SceneKey;
 import com.scenekey.util.Utility;
 import com.squareup.picasso.Picasso;
 
@@ -109,20 +107,6 @@ public class TryDemo_Adapter extends RecyclerView.Adapter<TryDemo_Adapter.ViewHo
     public int getItemCount() {
         return roomPersonList.size();
     }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txt_name_gvb1;
-        private ImageView img_profile_gvb1;
-
-        ViewHolder(View view) {
-            super(view);
-            txt_name_gvb1 =  view.findViewById(R.id.txt_name_gvb1);
-            img_profile_gvb1 =  view.findViewById(R.id.img_profile_gvb1);
-        }
-    }
-
-
-   /* on Click popUpMyProfile start here  */
 
     private void popUpMyProfile() {
         final ImageView img_red, img_yellow, img_green, img_p1_profile;
@@ -249,6 +233,9 @@ public class TryDemo_Adapter extends RecyclerView.Adapter<TryDemo_Adapter.ViewHo
 
     }
 
+
+   /* on Click popUpMyProfile start here  */
+
     private void setUserStatus(int i, ImageView imageView) {
         switch (i) {
             case 1:
@@ -268,7 +255,6 @@ public class TryDemo_Adapter extends RecyclerView.Adapter<TryDemo_Adapter.ViewHo
         notifyDataSetChanged();
     }
 
-
     private void callProfile(EventAttendy attendy ,boolean ownProfile) {
         dialog.dismiss();
         try {
@@ -277,8 +263,6 @@ public class TryDemo_Adapter extends RecyclerView.Adapter<TryDemo_Adapter.ViewHo
             e.printStackTrace();
         }
     }
-
-    /* on Click popUpMyProfile end here */
 
     private void newPopUp(final int value){
         final NotificationData person = demo_event_fragment.getData(value);
@@ -291,9 +275,8 @@ public class TryDemo_Adapter extends RecyclerView.Adapter<TryDemo_Adapter.ViewHo
             @Override
             public void onSendCLick(TextView textView, ProfilePopUp_Demo profilePopUp, NotificationData obj) {
                 dismiss();
-                activity.hideStatusBar();
                 Utility utility=new Utility(activity);
-                utility.showCustomPopup("Good Nudge!", String.valueOf(R.font.raleway_bold));
+                utility.showCustomPopup("Good Nudge!", String.valueOf(R.font.montserrat_medium));
             }
 
             @Override
@@ -323,6 +306,19 @@ public class TryDemo_Adapter extends RecyclerView.Adapter<TryDemo_Adapter.ViewHo
                 Log.e("Value " , profilePopUp.list.toString());
             }
         }.show();*/
+    }
+
+    /* on Click popUpMyProfile end here */
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView txt_name_gvb1;
+        private ImageView img_profile_gvb1;
+
+        ViewHolder(View view) {
+            super(view);
+            txt_name_gvb1 = view.findViewById(R.id.txt_name_gvb1);
+            img_profile_gvb1 = view.findViewById(R.id.img_profile_gvb1);
+        }
     }
 
 }

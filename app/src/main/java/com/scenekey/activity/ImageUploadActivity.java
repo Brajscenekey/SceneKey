@@ -9,22 +9,18 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,7 +54,6 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.scenekey.R;
 import com.scenekey.adapter.ImageUpload_Adapter;
-import com.scenekey.fragment.Bio_Fragment;
 import com.scenekey.helper.Constant;
 import com.scenekey.helper.CustomProgressBar;
 import com.scenekey.helper.Pop_Up_Option;
@@ -86,16 +81,15 @@ import java.util.UUID;
 public class ImageUploadActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = ImageUploadActivity.class.toString();
+    public boolean isChanged = false;
     private Context context=this;
     private ImageUpload_Adapter adapter;
     private ImageView img_profile,img_f1_back;
-
     private CognitoCredentialsProvider credentialsProvider;
     private int value = 0;
     private String key,from="";
     private CustomProgressBar prog;
     private Bitmap bitmap;
-    public boolean isChanged=false;
     private  Utility utility;
 
     @Override
@@ -440,7 +434,7 @@ public class ImageUploadActivity extends AppCompatActivity implements View.OnCli
                     dismissProgDialog();
                     isChanged=true;
                     //success uploaded
-                    utility.showCustomPopup(context.getString(R.string.success_uploaded),String.valueOf(R.font.raleway_bold));
+                    utility.showCustomPopup(context.getString(R.string.success_uploaded), String.valueOf(R.font.montserrat_medium));
                 }
                 if(state.equals(TransferState.FAILED)){
                     /*Toast.makeText(Image_uploade_Activity.this, "State Change" + state,
@@ -588,7 +582,7 @@ e.printStackTrace();
                         adapter.notifyDataSetChanged();
                         dismissProgDialog();
                         isChanged=true;
-                        utility.showCustomPopup(context.getString(R.string.success_deleted),String.valueOf(R.font.raleway_bold));
+                        utility.showCustomPopup(context.getString(R.string.success_deleted), String.valueOf(R.font.montserrat_medium));
                     }
                     else Utility.showToast(context,"Something went wrong",0);
                 }

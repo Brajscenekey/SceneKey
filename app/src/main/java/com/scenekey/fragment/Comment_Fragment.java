@@ -58,6 +58,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
         txt_char =  view.findViewById(R.id.txt_char);
         edt_comment =  view.findViewById(R.id.edt_comment);
         ImageView img_profile =  view.findViewById(R.id.img_profile);
+        ImageView imgPost = view.findViewById(R.id.imgPost);
         TextView txt_post_comment =  view.findViewById(R.id.txt_post_comment);
         ImageView img_f1_back =  view.findViewById(R.id.img_f1_back);
         view.findViewById(R.id.mainlayout).setOnClickListener(this);
@@ -65,6 +66,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
 
         img_f1_back.setOnClickListener(this);
         txt_post_comment.setOnClickListener(this);
+        imgPost.setOnClickListener(this);
 
         Picasso.with(activity).load(activity.userInfo().getUserImage()).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(img_profile);
 
@@ -103,7 +105,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.txt_post_comment:
+            case R.id.imgPost:
                 if (kyeInStatus.equals(Constant.KEY_NOTEXIST)) {
                     activity.showProgDialog(false,TAG);
                     addUserIntoEvent();
@@ -181,7 +183,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
 
                     try {
                         if (new JSONObject(response).getString("msg").equals("Success")) {
-                            activity.showCustomPopup("Comment has been posted successfully.", String.valueOf(R.font.arial_regular), 1);
+                            activity.showCustomPopup("Comment has been posted successfully.", 1);
                         }
                     }catch (Exception e){
                         e.printStackTrace();

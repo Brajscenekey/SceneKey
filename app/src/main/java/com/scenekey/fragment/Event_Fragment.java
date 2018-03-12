@@ -101,26 +101,27 @@ import java.util.TimerTask;
 public class Event_Fragment extends Fragment implements View.OnClickListener,StatusBarHide {
 
     private static Timer timerHttp;
+
     public final String TAG = Event_Fragment.class.toString();
+
     public boolean canCallWebservice, isInfoVisible, isPopUpShowing, canGetNotification;
     public Double latitude, longitude;
     public TextView txt_event_name, txt_not_started, txt_discrp, txt_room, txt_f2_badge, txt_calender_i1,
             txt_hide_all_two, txt_hide_all_one, btn_got_it, txt_discipI_f2;
     public FloatingActionButton fabMenu1_like, fabMenu2_picture;
-    //arrayLists
     public ArrayList<Card> cardsList;
-    private Context context;
-    private HomeActivity activity;
-    private Utility utility;
-    private String eventId,venueName;
-    private String[] currentLatLng;
-    private int currentNudge,noNotify,timer;
     private LinearLayout info_view,no_one;
     private RelativeLayout rtlv2_animate_f2,rtlv_top,demoView; //Demo Screen
     private ImageView img_infoget_f2, img_f10_back,image_map,img_notif;
     private RecyclerView rclv_grid;
     private ScrollView scrl_all;
     private FloatingActionMenu menu_blue;
+    private Context context;
+    private HomeActivity activity;
+    private Utility utility;
+    private String eventId, venueName;
+    private String[] currentLatLng;
+    private int currentNudge, noNotify, timer;
     private Handler handler;
     private View popupview;
     private Dialog dialog;
@@ -131,7 +132,6 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     //Tinder Swipe
     private SwipeCardView card_stack_view;
     private ArrayList<NotificationData> nudgeList;
-
     //map data
     private MapView map_view;
     private GoogleMap googleMap;
@@ -220,7 +220,6 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RelativeLayout rlEventFragment = view.findViewById(R.id.rlEventFragment);
         fabMenu1_like = view.findViewById(R.id.fabMenu1_like);
         ImageView img_edit_i1 = view.findViewById(R.id.img_edit_i1);
         fabMenu2_picture = view.findViewById(R.id.fabMenu2_picture);
@@ -249,7 +248,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         // rclv_grid.hasFixedSize();
         txt_event_name.setText("");
 
-        setOnClick(rlEventFragment, img_edit_i1, menu_blue,
+        setOnClick(img_edit_i1, menu_blue,
                 btn_got_it,
                 image_map,
                 scrl_all,
@@ -359,13 +358,6 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rlEventFragment:
-                try {
-                    activity.hideStatusBar();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
 
             case R.id.img_infoget_f2:
                 try {
@@ -443,7 +435,6 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
 
                 break;
             case R.id.img_notif:
-                activity.hideStatusBar();
                 canGetNotification = true;
                 if (noNotify > 0) getNudges();
                 else noNotification();
@@ -482,16 +473,13 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         boolean a = false;
         Utility.e("Event fragment", currentLatLng[0] + " " + currentLatLng[1]);
         try {
-            a = !(userInfo().makeAdmin.equals(Constant.ADMIN_YES)) | !(activity.getDistance(new Double[]{latitude, longitude, Double.valueOf(currentLatLng[0]), Double.valueOf(currentLatLng[1])}) <= Constant.MAXIMUM_DISTANCE && activity.checkWithTime(eventDetails.getProfile_rating().getEvent_date(), Double.parseDouble(eventDetails.getProfile_rating().getInterval())));
+            a = (userInfo().makeAdmin.equals(Constant.ADMIN_YES)) | (activity.getDistance(new Double[]{latitude, longitude, Double.valueOf(currentLatLng[0]), Double.valueOf(currentLatLng[1])}) <= Constant.MAXIMUM_DISTANCE && activity.checkWithTime(eventDetails.getProfile_rating().getEvent_date(), Double.parseDouble(eventDetails.getProfile_rating().getInterval())));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return a;
     }
 
-    public void keyInPopUp() {
-        utility.showCustomPopup(getString(R.string.enotat), String.valueOf(R.font.arial_regular));
-    }
 
     /***
      * For getting the nudge at notification popUp and show on it
@@ -704,13 +692,13 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                         if (object.has("success")) if (object.getInt("success") == 1) {
                             if(object.getString("msg").contains(" liked the event.")){
                                 fabMenu1_like.setImageDrawable(getResources().getDrawable(R.drawable.red_heart));
-                                activity.showCustomPopup("you liked this event.", String.valueOf(R.font.arial_regular), 1);
+                                activity.showCustomPopup("you liked this event.", 1);
 
 
                             }
                             else if(object.getString("msg").contains("unliked the event.")){
                                 fabMenu1_like.setImageDrawable(getResources().getDrawable(R.drawable.heart));
-                                activity.showCustomPopup(getString(R.string.kp_unlike), String.valueOf(R.font.arial_regular), 0);
+                                activity.showCustomPopup(getString(R.string.kp_unlike), 0);
                             }
                             getAllData();
                             //{"success":1,"msg":"your have liked the event."}
@@ -764,9 +752,9 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                         JSONObject respo = new JSONObject(response);
                         if(respo.getInt("success")==0){
                             Utility.showToast(context,respo.getString("msg"),0);
-                            activity.showCustomPopup("Photo has been posted successfully.", String.valueOf(R.font.arial_regular), 1);
+                            activity.showCustomPopup("Photo has been posted successfully.", 1);
                         } else {
-                            activity.showCustomPopup("Photo has been posted successfully.", String.valueOf(R.font.arial_regular), 1);
+                            activity.showCustomPopup("Photo has been posted successfully.", 1);
                         }
                     }catch (Exception e){
                         activity.incrementKeyPoints(getString(R.string.kp_img_post));
@@ -819,14 +807,14 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     /**
      * The dialogue use to show if user is not in the range of the event and evneet is not started yet
      */
-    private void cantJoinDialog() {
+    public void cantJoinDialog() {
 
         if(activity.getDistance(new Double[]{latitude, longitude, Double.valueOf(currentLatLng[0]), Double.valueOf(currentLatLng[1])}) <= Constant.MAXIMUM_DISTANCE) {
-            utility.showCustomPopup(getString(R.string.enotStarted), String.valueOf(R.font.arial_regular));
+            utility.showCustomPopup(getString(R.string.enotStarted), String.valueOf(R.font.montserrat_medium));
         }else if(activity.userInfo().makeAdmin.equals(Constant.ADMIN_YES)){
-            utility.showCustomPopup(getString(R.string.enotStarted), String.valueOf(R.font.arial_regular));
+            utility.showCustomPopup(getString(R.string.enotStarted), String.valueOf(R.font.montserrat_medium));
         }else  {
-            utility.showCustomPopup(getString(R.string.enotat), String.valueOf(R.font.arial_regular));
+            utility.showCustomPopup(getString(R.string.enotat), String.valueOf(R.font.montserrat_medium));
         }
 
     }
@@ -1034,7 +1022,6 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
             }
         });
 
-
     }
 
     private boolean checkWithTime_No_Attendy(final String date , Double interval) throws ParseException {
@@ -1114,7 +1101,6 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        activity.hideStatusBar();
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
 
@@ -1282,7 +1268,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                 }
             };
             VolleySingleton.getInstance(context).addToRequestQueue(request);
-            request.setRetryPolicy(new DefaultRetryPolicy(10000, 0, 1));
+            request.setRetryPolicy(new DefaultRetryPolicy(20000, 0, 1));
         } else {
             utility.snackBar(rclv_grid, getString(R.string.internetConnectivityError), 0);
             activity.dismissProgDialog();
@@ -1374,7 +1360,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
                 public void onResponse(String response) {
                     activity.dismissProgDialog();
 
-                    activity.showCustomPopup(getResources().getString(R.string.goodNudge), String.valueOf(R.font.arial_regular), 1);
+                    activity.showCustomPopup(getResources().getString(R.string.goodNudge), 1);
 
                     if(dialog!=null) dialog.dismiss();
                     if(profilePop!=null) profilePop.dismiss();
@@ -1414,7 +1400,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
      * Tost shown at popup of user.
      */
     public void cantInteract() {
-        utility.showCustomPopup(getString(R.string.sorryEvent), String.valueOf(R.font.arial_regular));
+        utility.showCustomPopup(getString(R.string.sorryEvent), String.valueOf(R.font.montserrat_medium));
     }
 
     public boolean check() throws ParseException {
@@ -1437,7 +1423,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
     }
 
     public void noNotification() {
-        utility.showCustomPopup(getString(R.string.noNotification), String.valueOf(R.font.arial_regular));
+        utility.showCustomPopup(getString(R.string.noNotification), String.valueOf(R.font.montserrat_medium));
     }
 
     public void popupNotification_New(){
@@ -1491,6 +1477,7 @@ public class Event_Fragment extends Fragment implements View.OnClickListener,Sta
         };
         popup.show();
     }
+
 
 }
 

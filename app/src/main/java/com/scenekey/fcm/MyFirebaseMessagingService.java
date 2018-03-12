@@ -14,6 +14,8 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.scenekey.R;
 import com.scenekey.activity.HomeActivity;
+import com.scenekey.activity.LoginActivity;
+import com.scenekey.helper.SessionManager;
 import com.scenekey.util.Utility;
 
 import java.util.Date;
@@ -37,7 +39,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //11-02 12:35:11.793 1474-2288/com.scenekey E/MyFirebaseMsgService: From: 1034290158398{title=, message=Arvind Patidar has commented on Paige Clem, notificationType=[]}
         String notificationMsg = remoteMessage.getData().get("message");
 
-        sendNotification(remoteMessage.getTtl(), title, notificationMsg, false);
+        Intent intent = null;
+        {
+            SessionManager sessionManager = new SessionManager(this);
+            if (sessionManager.isLoggedIn()) {
+                intent = new Intent(this, HomeActivity.class);
+            } else {
+                intent = new Intent(this, LoginActivity.class);
+            }
+        }
+        sendNotification(remoteMessage.getTtl(), title, intent, notificationMsg, false);
 
 
 
@@ -137,12 +148,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     //This method is only generating push notification
     //It is same as we did in earlier posts
 
-    private void sendNotification(int id, String title, String messageBody, boolean send) {
-        Intent intent = new Intent(this, HomeActivity.class);
-/*
-        intent.putExtra("reference_id", reference_id);
-        intent.putExtra("title", title);
-        intent.putExtra("body", body);*/
+    private void sendNotification(int id, String title, Intent intent, String messageBody, boolean send) {
 
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Random r = new Random();

@@ -299,12 +299,12 @@ public class Demo_Event_Fragment extends Fragment implements View.OnClickListene
                     liked=true;
                     fabMenu1.setImageDrawable(getResources().getDrawable(R.drawable.red_heart));
 
-                    utility.showCustomPopup("You liked the event.",String.valueOf(R.font.arial_regular));
+                    utility.showCustomPopup("You liked the event.", String.valueOf(R.font.montserrat_medium));
                 }
                 else {
                     liked=false;
                     fabMenu1.setImageDrawable(getResources().getDrawable(R.drawable.heart));
-                    utility.showCustomPopup("You unliked the event.",String.valueOf(R.font.arial_regular));
+                    utility.showCustomPopup("You unliked the event.", String.valueOf(R.font.montserrat_medium));
                 }
                 break;
             case R.id.fabMenu2_picture:
@@ -696,7 +696,7 @@ public class Demo_Event_Fragment extends Fragment implements View.OnClickListene
     }
 
     public void noNotification() {
-        utility.showCustomPopup(getString(R.string.noNotification),String.valueOf(R.font.arial_regular));
+        utility.showCustomPopup(getString(R.string.noNotification), String.valueOf(R.font.montserrat_medium));
     }
 
     private void popup_notification_new(final int position){

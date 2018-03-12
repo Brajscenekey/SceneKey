@@ -209,12 +209,11 @@ public class BioActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     private void callIntent() {
-        Intent objSuccess=new Intent(context,HomeActivity.class);
+        Intent intent = new Intent(context, HomeActivity.class);
         // Closing all the Activities
-        objSuccess.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        // Add new Flag to start new Activity
-        objSuccess.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(objSuccess);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         finish();
     }
 

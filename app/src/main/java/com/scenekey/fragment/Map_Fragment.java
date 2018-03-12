@@ -58,15 +58,12 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Map_Fragment extends Fragment implements GoogleMap.OnMarkerClickListener {
 
+    private final String TAG = Map_Fragment.class.toString();
     private Context context;
     private HomeActivity activity;
-
-    private final String TAG = Map_Fragment.class.toString();
     private String lat="",lng="";
     private boolean clicked;
 
@@ -555,7 +552,7 @@ public class Map_Fragment extends Fragment implements GoogleMap.OnMarkerClickLis
     }
 
     private void showNoEventDialog() {
-        utility.showCustomPopup(getString(R.string.mapNoevent),String.valueOf(R.font.arial_regular));
+        utility.showCustomPopup(getString(R.string.mapNoevent), String.valueOf(R.font.montserrat_medium));
         if (eventArrayMarker == null) eventArrayMarker = new ArrayList<>();
         else eventArrayMarker.clear();
     }

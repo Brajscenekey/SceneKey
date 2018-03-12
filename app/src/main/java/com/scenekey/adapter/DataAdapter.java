@@ -176,7 +176,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                activity.hideStatusBar();
+                //  activity.hideStatusBar();
             }
         });
 
@@ -270,7 +270,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         dialog.show();
         //popupView.setBackgroundColor(0);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        activity.hideStatusBar();
+        // activity.hideStatusBar();
     }
 
     private void setUserStatus(int i, ImageView imageView) {

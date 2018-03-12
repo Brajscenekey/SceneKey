@@ -1,7 +1,6 @@
 package com.scenekey.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.scenekey.R;
@@ -22,10 +20,10 @@ import com.squareup.picasso.Picasso;
 
 public class Demo_Comment_Fragment extends Fragment implements View.OnClickListener {
 
+    private final String TAG = Demo_Comment_Fragment.class.toString();
     private Demo_Event_Fragment fragment;
     private HomeActivity activity;
     private Context context;
-    private final String TAG = Demo_Comment_Fragment.class.toString();
     private int maxNumber = 120;
     private int count = 0;
     private TextView txt_char;
@@ -43,12 +41,14 @@ public class Demo_Comment_Fragment extends Fragment implements View.OnClickListe
         txt_char =  view.findViewById(R.id.txt_char);
         edt_comment =  view.findViewById(R.id.edt_comment);
         ImageView img_profile =  view.findViewById(R.id.img_profile);
+        ImageView imgPost = view.findViewById(R.id.imgPost);
         TextView txt_post_comment =  view.findViewById(R.id.txt_post_comment);
         ImageView img_f1_back =  view.findViewById(R.id.img_f1_back);
         txt_char.setText(maxNumber + " ");
 
         img_f1_back.setOnClickListener(this);
         txt_post_comment.setOnClickListener(this);
+        imgPost.setOnClickListener(this);
 
         Picasso.with(activity).load(activity.userInfo().getUserImage()).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(img_profile);
 
@@ -88,7 +88,7 @@ public class Demo_Comment_Fragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.txt_post_comment:
+            case R.id.imgPost:
                 fragment.addUserComment(edt_comment.getText().toString());
                 activity.onBackPressed();
                 break;

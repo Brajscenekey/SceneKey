@@ -235,7 +235,7 @@ public abstract class ProfilePopUp_Demo extends Dialog implements View.OnClickLi
                 else {
                     activity.hideStatusBar();
                     Utility utility = new Utility(activity);
-                    utility.showCustomPopup("Good Nudge!", String.valueOf(R.font.raleway_bold));
+                    utility.showCustomPopup("Good Nudge!", String.valueOf(R.font.montserrat_medium));
                     dismiss();
                 }
                 break;

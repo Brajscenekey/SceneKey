@@ -6,8 +6,8 @@
     android:orientation="vertical">
 
     <View android:id="@+id/gap"
-        android:layout_height="@dimen/_40sdp"
         android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
         android:visibility="gone"/>
 
     <RelativeLayout
@@ -21,10 +21,10 @@
             android:id="@+id/rtlv_EE"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_30sdp"
-            android:paddingLeft="@dimen/_6sdp"
-            android:paddingRight="@dimen/_6sdp"
             android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/rounded_rectangle_2_box">
+            android:background="@drawable/rounded_rectangle_2_box"
+            android:paddingLeft="@dimen/_6sdp"
+            android:paddingRight="@dimen/_6sdp">
             <TextView
                 android:id="@+id/txt_EE"
                 android:layout_width="match_parent"
@@ -39,9 +39,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_12sdp"
                 android:layout_toLeftOf="@+id/txt_at"
-                android:visibility="gone"
                 android:textColor="@color/gray_bottom"
-                android:textSize="@dimen/_10sdp"/>
+                android:textSize="@dimen/_10sdp"
+                android:visibility="gone" />
             <!--android:text=" 2017/12/15 "-->
             <TextView
                 android:id="@+id/txt_at"
@@ -49,9 +49,9 @@
                 android:layout_height="@dimen/_12sdp"
                 android:layout_toLeftOf="@+id/txt_time"
                 android:text=" At "
-                android:visibility="gone"
                 android:textColor="@color/old_primary"
-                android:textSize="@dimen/_10sdp"/>
+                android:textSize="@dimen/_10sdp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/txt_time"
@@ -60,9 +60,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:text="3:00 Pm"
-                android:visibility="gone"
                 android:textColor="@color/gray_bottom"
-                android:textSize="@dimen/_10sdp"/>
+                android:textSize="@dimen/_10sdp"
+                android:visibility="gone" />
         </RelativeLayout>
 
 
@@ -73,7 +73,6 @@
             android:layout_height="@dimen/_250sdp"
             android:layout_below="@+id/rtlv_EE"
             android:layout_marginTop="@dimen/_10sdp"
-            android:background="@drawable/bg_event_card"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -83,7 +82,10 @@
             android:layout_below="@+id/rtlv_EE"
             android:layout_marginTop="@dimen/_10sdp"
             android:background="@drawable/bg_event_card"
+            android:fontFamily="@font/frank_heavy_reg"
             android:gravity="center"
+            android:paddingLeft="@dimen/_20sdp"
+            android:paddingRight="@dimen/_20sdp"
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp" />
 

@@ -8,6 +8,8 @@ public class WebServices {
     public final static String TERMS_ = "http://scenekey.com/Terms&conditions.pdf";
     public final static String PRIVACY_ = "http://scenekey.com/Privacypolicy.pdf";
     public final static String BASE_IMAGE_URL = "http://dev.scenekey.com/"; //old
+
+
     public final static String EVENT_BY_TAG = "https://0kh929t4ng.execute-api.us-west-1.amazonaws.com/dev/events/search";
     public final static String EVENT_TAG = "https://0kh929t4ng.execute-api.us-west-1.amazonaws.com/dev/tags";
     public final static String DEFAULT_IMAGE = "https://0kh929t4ng.execute-api.us-west-1.amazonaws.com/dev/users";
@@ -28,6 +30,7 @@ public class WebServices {
     /**
      * Event Like , Comment and post picture
      ***/
+    public final static String EVENT_DETAIL = BASE_URL + "webservices/get_event_detail/?event_id=";
     public final static String EVENT_LIKE           = BASE_URL + "webservices/addEventLike";
     public final static String EVENT_COMMENT        = BASE_URL + "webservices/addeventcomment";
     public final static String EVENT_POST_PIC       = BASE_URL + "webservices/addeventpicture";

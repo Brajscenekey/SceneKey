@@ -669,63 +669,72 @@ public class FloatingActionMenu extends ViewGroup {
     public void open(final boolean animate) {
         android.support.v4.app.Fragment fragment = ((HomeActivity) this.getContext()).getCurrentFragment();
 
-        Event_Fragment event_fragment = (Event_Fragment) ((HomeActivity) this.getContext()).getCurrentFragment();
-        if (fragment instanceof Event_Fragment && event_fragment.keyInEventCheck()) {
-            event_fragment.keyInPopUp();
-        } else {
-            if (!isOpened()) {
-                if (isBackgroundEnabled()) {
-                    mShowBackgroundAnimator.start();
-                }
 
-                if (mIconAnimated) {
-                    if (mIconToggleSet != null) {
-                        mIconToggleSet.start();
-                    } else {
-                        mCloseAnimatorSet.cancel();
-                        mOpenAnimatorSet.start();
-                    }
-                }
-
-                int delay = 0;
-                int counter = 0;
-                mIsMenuOpening = true;
-                for (int i = getChildCount() - 1; i >= 0; i--) {
-                    View child = getChildAt(i);
-                    if (child instanceof FloatingActionButton && child.getVisibility() != GONE) {
-                        counter++;
-
-                        final FloatingActionButton fab = (FloatingActionButton) child;
-                        mUiHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isOpened()) return;
-
-                                if (fab != mMenuButton) {
-                                    fab.show(animate);
-                                }
-
-                                Label label = (Label) fab.getTag(R.id.fab_label);
-                                if (label != null && label.isHandleVisibilityChanges()) {
-                                    label.show(animate);
-                                }
-                            }
-                        }, delay);
-                        delay += mAnimationDelayPerItem;
-                    }
-                }
-
-                mUiHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mMenuOpened = true;
-
-                        if (mToggleListener != null) {
-                            mToggleListener.onMenuToggle(true);
-                        }
-                    }
-                }, ++counter * mAnimationDelayPerItem);
+        if (fragment instanceof Event_Fragment) {
+            Event_Fragment event_fragment = (Event_Fragment) ((HomeActivity) this.getContext()).getCurrentFragment();
+            if (!(event_fragment.keyInEventCheck())) {
+                event_fragment.cantJoinDialog();
+            } else {
+                openKey(animate);
             }
+        } else {
+            openKey(animate);
+        }
+    }
+
+    private void openKey(final boolean animate) {
+        if (!isOpened()) {
+            if (isBackgroundEnabled()) {
+                mShowBackgroundAnimator.start();
+            }
+
+            if (mIconAnimated) {
+                if (mIconToggleSet != null) {
+                    mIconToggleSet.start();
+                } else {
+                    mCloseAnimatorSet.cancel();
+                    mOpenAnimatorSet.start();
+                }
+            }
+
+            int delay = 0;
+            int counter = 0;
+            mIsMenuOpening = true;
+            for (int i = getChildCount() - 1; i >= 0; i--) {
+                View child = getChildAt(i);
+                if (child instanceof FloatingActionButton && child.getVisibility() != GONE) {
+                    counter++;
+
+                    final FloatingActionButton fab = (FloatingActionButton) child;
+                    mUiHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isOpened()) return;
+
+                            if (fab != mMenuButton) {
+                                fab.show(animate);
+                            }
+
+                            Label label = (Label) fab.getTag(R.id.fab_label);
+                            if (label != null && label.isHandleVisibilityChanges()) {
+                                label.show(animate);
+                            }
+                        }
+                    }, delay);
+                    delay += mAnimationDelayPerItem;
+                }
+            }
+
+            mUiHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mMenuOpened = true;
+
+                    if (mToggleListener != null) {
+                        mToggleListener.onMenuToggle(true);
+                    }
+                }
+            }, ++counter * mAnimationDelayPerItem);
         }
     }
 

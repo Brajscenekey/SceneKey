@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -46,6 +45,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.scenekey.R;
 import com.scenekey.aws_service.Aws_Web_Service;
 import com.scenekey.fragment.Add_Fragment;
+import com.scenekey.fragment.Demo_Event_Fragment;
+import com.scenekey.fragment.Event_Fragment;
 import com.scenekey.fragment.Home_No_Event_Fragment;
 import com.scenekey.fragment.Map_Fragment;
 import com.scenekey.fragment.NearEvent_Fragment;
@@ -120,6 +121,32 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         //StatusBarUtil.setTranslucent(this);
         setContentView(R.layout.activity_home);
+
+        //automatically hide status bar
+        View decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener
+                (new View.OnSystemUiVisibilityChangeListener() {
+                    @Override
+                    public void onSystemUiVisibilityChange(int visibility) {
+                        // Note that system bars will only be "visible" if none of the
+                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                            // TODO: The system bars are visible. Make any desired
+                            Utility.e(TAG, "Status bar visible");
+                            Fragment fragment = getCurrentFragment();
+                            if (fragment instanceof Event_Fragment | fragment instanceof Demo_Event_Fragment) {
+                                hideStatusBar();
+                            }
+                        } else {
+                            // TODO: The system bars are NOT visible. Make any desired
+                            // adjustments to your UI, such as hiding the action bar or
+                            // other navigational controls.
+                            Utility.e(TAG, "Status bar Invisible");
+
+                        }
+                    }
+                });
+
         top_status = findViewById(R.id.top_status);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -152,7 +179,121 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 StatusBarUtil.setStatusBarColor(this, R.color.new_white_bg);
             }
         }
+
+
+        //check
+  /*      if (getIntent().getExtras() != null) {
+          String notificationType = getIntent().getStringExtra("notificationType");
+          if (!(notificationType.isEmpty())&&notificationType.equalsIgnoreCase("2")){
+              String eventId = getIntent().getStringExtra("eventId");
+              //getEventData(eventId);
+          }
+        }*/
+
     }
+
+
+    /* when notification receive fragment start here */
+/*
+    public void getEventData(String eventId){
+        if (utility.checkInternetConnection()) {
+            StringRequest request = new StringRequest(Request.Method.POST, WebServices.EVENT_DETAIL+eventId, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    dismissProgDialog();
+                    // get response
+                    try {
+                        JSONObject jo = new JSONObject(response);
+
+                        if (jo.has("success")) {
+                            int status = jo.getInt("success");
+                            if (status == 0){
+                                dismissProgDialog();
+                                try {
+                                    Toast.makeText(context,jo.getString("message"),Toast.LENGTH_SHORT).show();
+                                    if (eventsArrayList == null) eventsArrayList = new ArrayList<>();
+                                    else eventsArrayList.clear();
+                                    setRecyclerView();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            //else if()
+                        } else {
+
+                            if (jo.has("eventDetail")) {
+                                if (eventsArrayList == null) eventsArrayList = new ArrayList<>();
+                                else eventsArrayList.clear();
+                                JSONArray eventAr = jo.getJSONArray("events");
+                                for (int i = 0; i < eventAr.length(); i++) {
+                                    JSONObject object = eventAr.getJSONObject(i);
+                                    Events events = new Events();
+                                    if (object.has("venue"))
+                                        events.setVenueJSON(object.getJSONObject("venue"));
+                                    if (object.has("artists"))
+                                        events.setArtistsArray(object.getJSONArray("artists"));
+                                    if (object.has("events"))
+                                        events.setEventJson(object.getJSONObject("events"));
+                                    try{
+                                        events.setOngoing(events.checkWithTime(events.getEvent().event_date , events.getEvent().interval));
+                                    }catch (Exception e){
+                                        Utility.e("Date exception",e.toString());
+                                    }
+                                    try {
+                                        events.settimeFormat();
+                                    }catch (Exception e){
+                                        Utility.e("Exception time",e.toString());
+                                    }
+                                    try {
+                                        events.setRemainingTime();
+                                    }
+                                    catch (Exception e){
+                                        Utility.e("Exception Remaining",e.toString());
+                                    }
+                                    eventsArrayList.add(events);
+                                    // Util.printLog("Result",events.toString());
+                                }
+                                if (eventsArrayList.size() <= 0) {
+                                    Toast.makeText(context, "No Event found near your location", Toast.LENGTH_LONG).show();
+                                }
+                                setRecyclerView();
+                            }
+                            dismissProgDialog();
+                        }
+                    } catch (Exception e) {
+                        dismissProgDialog();
+                        Utility.showToast(context,getString(R.string.somethingwentwrong),0);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError e) {
+                    utility.volleyErrorListner(e);
+                    dismissProgDialog();
+                }
+            }) {
+                @Override
+                public Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("lat",lat);
+                    params.put("long",lng);
+                    params.put("user_id", SceneKey.sessionManager.getUserInfo().userID + "");
+
+                    Utility.e(TAG," params "+params.toString());
+                    return params;
+                }
+            };
+            VolleySingleton.getInstance(context).addToRequestQueue(request);
+            request.setRetryPolicy(new DefaultRetryPolicy(10000, 0, 1));
+        }else{
+            utility.snackBar(rcViewTrending,getString(R.string.internetConnectivityError),0);
+            dismissProgDialog();
+        }
+    }
+*/
+
+      /* when notification receive fragment end here */
 
     @Override
     protected void onStart() {
@@ -1271,7 +1412,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         Utility.e("Response",s);
                         userInfo.keyPoints=((points+1)+"");
                         showKeyPoints("+1 Key Points!");
-                        hideStatusBar();
                         updateSession(userInfo);
                     }
                 } catch (IOException e) {
@@ -1324,7 +1464,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         //   utility.showCustomPopup(msg, String.valueOf(R.font.arial_regular));
 
                         showKeyPoints("-1 Key Points!");
-                        hideStatusBar();
                         userInfo.keyPoints=(points <=0?0+"":(points-1)+"");
                         updateSession(userInfo);
                     }
@@ -1373,7 +1512,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void showCustomPopup(String message, String fontType, final int call) {
+    public void showCustomPopup(String message, final int call) {
         final Dialog dialog = new Dialog(context);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setContentView(R.layout.custom_popup);
@@ -1382,8 +1521,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         TextView tvPopupOk, tvMessages;
 
         tvMessages = dialog.findViewById(R.id.custom_popup_tvMessage);
-        Typeface typeface = Typeface.create(fontType, Typeface.BOLD);
-        tvMessages.setTypeface(typeface);
         tvPopupOk = dialog.findViewById(R.id.custom_popup_ok);
         tvPopupOk.setText(R.string.ok);
         tvMessages.setText(message);
@@ -1489,6 +1626,5 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
-
 
 }

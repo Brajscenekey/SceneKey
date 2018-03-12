@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/_200sdp"
+    android:layout_width="@dimen/_230sdp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:animateLayoutChanges="true"
@@ -13,14 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:fontFamily="@font/montserrat_medium"
         android:gravity="center"
         android:lineSpacingExtra="@dimen/_5sdp"
         android:minHeight="@dimen/_80sdp"
         android:paddingBottom="@dimen/_10sdp"
-        android:paddingLeft="@dimen/_15sdp"
-        android:paddingRight="@dimen/_15sdp"
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingRight="@dimen/_10sdp"
         android:paddingTop="@dimen/_10sdp"
-        android:fontFamily="@font/arial_regular"
         android:textColor="@color/black"
         android:textSize="@dimen/_14sdp" />
 
@@ -42,8 +42,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:fontFamily="@font/montserrat_regular"
             android:gravity="center"
-            android:fontFamily="@font/raleway_medium"
             android:text="OK"
             android:textColor="@color/blue"
             android:textSize="@dimen/_12sdp" />

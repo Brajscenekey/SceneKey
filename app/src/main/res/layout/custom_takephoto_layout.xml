@@ -13,8 +13,8 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_35sdp"
-            android:fontFamily="@font/raleway_regular"
+            android:layout_height="39dp"
+            android:fontFamily="@font/montserrat_regular"
             android:gravity="center"
             android:text="Select"
             android:textColor="@color/gray2"
@@ -29,7 +29,7 @@
             android:id="@+id/tv_camera"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
-            android:fontFamily="@font/raleway_regular"
+            android:fontFamily="@font/montserrat_regular"
             android:gravity="center"
             android:text="Take photo"
             android:textColor="@color/blueToastTxt"
@@ -43,7 +43,7 @@
         android:layout_height="@dimen/_45sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:background="@drawable/cus_round_all_edgeblack_white"
-        android:fontFamily="@font/raleway_regular"
+        android:fontFamily="@font/montserrat_regular"
         android:gravity="center"
         android:text="Cancel"
         android:textColor="@color/blueToastTxt"

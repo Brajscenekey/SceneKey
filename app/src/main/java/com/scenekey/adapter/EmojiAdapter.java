@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.scenekey.R;
 import com.scenekey.cus_view.ProfilePopUp;
-import com.scenekey.cus_view.ProfilePopUp_Notification;
 import com.vanniktech.emoji.EmojiTextView;
 
 /**
@@ -62,15 +61,6 @@ public class EmojiAdapter extends RecyclerView.Adapter<EmojiAdapter.Holder> {
         return list.length;
     }
 
-    class Holder extends RecyclerView.ViewHolder{
-        EmojiTextView tv_emoji;
-        public Holder(View itemView) {
-            super(itemView);
-            tv_emoji =  itemView.findViewById(R.id.tv_emoji);
-
-        }
-    }
-
     public int getIndicatorCount(double recyclerWidth,int tv_width){
         // return (int) ((tv_width*list.length)/(recyclerWidth*4));
         return  (list.length/28);
@@ -90,6 +80,16 @@ public class EmojiAdapter extends RecyclerView.Adapter<EmojiAdapter.Holder> {
         notifyDataSetChanged();
         profilePopUp.updateIndicator();
 
+    }
+
+    class Holder extends RecyclerView.ViewHolder {
+        EmojiTextView tv_emoji;
+
+        public Holder(View itemView) {
+            super(itemView);
+            tv_emoji = itemView.findViewById(R.id.tv_emoji);
+
+        }
     }
 
 }

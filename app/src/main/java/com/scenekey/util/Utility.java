@@ -28,8 +28,6 @@ import com.scenekey.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import bolts.Bolts;
-
 
 /**
  * Created by mindiii on 1/2/18.
@@ -61,6 +59,14 @@ public class Utility {
         }
     }
 
+    public static void hideSoftKeyboard(Activity activity) {
+        //activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
     public boolean checkNetworkProvider(){
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         // get network provider status
@@ -73,14 +79,6 @@ public class Utility {
         // get network provider status
 
         return locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-
-    public static void hideSoftKeyboard(Activity activity) {
-        //activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputManager != null) {
-            inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
-        }
     }
 
     public void snackBar(View view, String message, int len){
@@ -176,6 +174,7 @@ public class Utility {
             if (error.getClass().equals(TimeoutError.class)) {
                 errorMessage = "Request timeout";
                 Utility.showToast(context, errorMessage, 0);
+
             } else if (error.getClass().equals(NoConnectionError.class)) {
                 errorMessage = "Failed to connect server";
                 Utility.showToast(context, errorMessage, 0);
