@@ -49,6 +49,7 @@ public class Demo_Comment_Fragment extends Fragment implements View.OnClickListe
         img_f1_back.setOnClickListener(this);
         txt_post_comment.setOnClickListener(this);
         imgPost.setOnClickListener(this);
+        view.findViewById(R.id.mainlayout).setOnClickListener(this);  //for background click
 
         Picasso.with(activity).load(activity.userInfo().getUserImage()).transform(new CircleTransform()).placeholder(R.drawable.image_defult_profile).into(img_profile);
 

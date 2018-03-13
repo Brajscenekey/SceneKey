@@ -61,7 +61,7 @@ public abstract class ProfilePopUp_Notification extends Dialog implements View.O
     private AWSImage awsImage;
 
     protected ProfilePopUp_Notification(@NonNull final Activity activity, final AWSImage awsImage, int maxNudes, final NotificationData nudge) {
-        super(activity, android.R.style.Theme_Translucent);
+        super(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
 
         this.context=activity;
         this.activity= (HomeActivity) activity;

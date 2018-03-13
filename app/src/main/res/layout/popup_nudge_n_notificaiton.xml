@@ -107,21 +107,18 @@
                 android:textSize="@dimen/_14ssp" />
         </LinearLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/linLayProfile">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/linLayProfile"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/lr_get_ndge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_80sdp"
                     android:divider="@drawable/divider_nudge"
                     android:gravity="center"
                     android:orientation="horizontal"
@@ -132,7 +129,6 @@
                         android:layout_width="@dimen/nudge_"
                         android:layout_height="@dimen/nudge_"
                         android:alpha="1"
-                        android:background="@drawable/circle_white"
                         android:gravity="center"
                         android:textColor="@color/white"
                         android:theme="@style/et_black_cursor"
@@ -141,7 +137,6 @@
                     <com.vanniktech.emoji.EmojiTextView
                         android:layout_width="@dimen/nudge_"
                         android:layout_height="@dimen/nudge_"
-                        android:background="@drawable/circle_white"
                         android:gravity="center"
                         android:textColor="@color/white"
                         android:textCursorDrawable="@drawable/cursor"
@@ -151,7 +146,6 @@
                     <com.vanniktech.emoji.EmojiTextView
                         android:layout_width="@dimen/nudge_"
                         android:layout_height="@dimen/nudge_"
-                        android:background="@drawable/circle_white"
                         android:gravity="center"
                         android:textColor="@color/white"
                         app:emojiSize="@dimen/nudge_text_size"
@@ -159,7 +153,6 @@
                     <com.vanniktech.emoji.EmojiTextView
                         android:layout_width="@dimen/nudge_"
                         android:layout_height="@dimen/nudge_"
-                        android:background="@drawable/circle_white"
                         android:gravity="center"
                         android:textColor="@color/white"
                         app:emojiSize="@dimen/nudge_text_size"
@@ -168,16 +161,15 @@
 
                 <TextView
                     android:id="@+id/tv_nudge"
-                    android:layout_width="@dimen/_280sdp"
+                    android:layout_width="@dimen/_250sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/_50sdp"
+                    android:layout_marginTop="@dimen/_70sdp"
                     android:background="@drawable/bg_send_nudge"
                     android:gravity="center"
                     android:textColor="@color/old_primary"
                     android:textSize="@dimen/_14sdp"
                     android:visibility="gone" />
-
                 <View
                     android:id="@+id/v_line"
                     android:layout_width="@dimen/_280sdp"
@@ -187,6 +179,7 @@
                     android:visibility="gone" />
 
                 <LinearLayout
+
                     android:id="@+id/lr_send_nudge"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
@@ -238,6 +231,7 @@
                         app:emojiSize="@dimen/nudge_text_size2"
                         />
                 </LinearLayout>
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -399,15 +393,15 @@
                         android:gravity="center"
                         android:text="@string/Nudge"
                         android:textColor="@color/old_primary"
-                        android:textSize="@dimen/_14sdp" />
+                        android:textSize="@dimen/_14sdp"
+                        android:visibility="visible" />
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_20sdp"/>
+                    android:layout_height="@dimen/_20sdp" />
 
             </LinearLayout>
 
-        </ScrollView>
 
 
     </RelativeLayout>

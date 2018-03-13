@@ -61,7 +61,7 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
         ImageView imgPost = view.findViewById(R.id.imgPost);
         TextView txt_post_comment =  view.findViewById(R.id.txt_post_comment);
         ImageView img_f1_back =  view.findViewById(R.id.img_f1_back);
-        view.findViewById(R.id.mainlayout).setOnClickListener(this);
+        view.findViewById(R.id.mainlayout).setOnClickListener(this);    //for background click on fragment
         txt_char.setText(maxNumber + " ");
 
         img_f1_back.setOnClickListener(this);
@@ -121,9 +121,6 @@ public class Comment_Fragment extends Fragment implements View.OnClickListener {
                 activity.onBackPressed();
                 break;
 
-            case R.id.mainlayout:
-                //for background click on fragment
-                break;
         }
     }
 

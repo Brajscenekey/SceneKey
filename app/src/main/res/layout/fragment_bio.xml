@@ -1,19 +1,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llBioFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
     android:background="@color/new_white_bg"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.scenekey.fragment.Bio_Fragment">
 
     <View
         android:id="@+id/top_status"
         android:layout_width="match_parent"
         android:layout_height="24dp"
-        android:visibility="gone"
-        android:background="@color/black"/>
+        android:background="@color/black"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,9 +26,9 @@
             android:layout_width="@dimen/top_bar_profile"
             android:layout_height="@dimen/top_bar_profile"
             android:layout_centerVertical="true"
-            android:paddingTop="@dimen/_10sdp"
             android:paddingBottom="@dimen/_10sdp"
             android:paddingLeft="@dimen/_10sdp"
+            android:paddingTop="@dimen/_10sdp"
             app:srcCompat="@drawable/ic_back_icon" />
 
 
@@ -37,8 +38,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/bio"
             android:fontFamily="@font/montserrat_regular"
+            android:text="@string/bio"
             android:textSize="@dimen/_21ssp"/>
 
 
@@ -54,15 +55,15 @@
             android:id="@+id/et_for_enterTxt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@null"
+            android:fontFamily="@font/raleway_medium"
             android:gravity="top"
+            android:maxLength="60"
             android:paddingLeft="@dimen/_5sdp"
             android:paddingTop="@dimen/_5sdp"
-            android:background="@null"
-            android:maxLength="60"
-            android:theme="@style/et_black_cursor"
-            android:fontFamily="@font/raleway_medium"
             android:textColor="@color/black90p"
-            android:textSize="@dimen/_16ssp" />
+            android:textSize="@dimen/_16ssp"
+            android:theme="@style/et_black_cursor" />
 
     </LinearLayout>
 
@@ -76,17 +77,17 @@
             android:id="@+id/tv_for_remainChar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="60"
+            android:layout_marginRight="@dimen/_2sdp"
             android:fontFamily="@font/raleway_regular"
+            android:text="60"
             android:textColor="@color/black90p"
-            android:textSize="@dimen/_12ssp"
-            android:layout_marginRight="@dimen/_2sdp"/>
+            android:textSize="@dimen/_12ssp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="char remaining"
             android:fontFamily="@font/raleway_regular"
+            android:text="char remaining"
             android:textColor="@color/black90p"
             android:textSize="@dimen/_12ssp" />
 
@@ -96,13 +97,13 @@
         android:id="@+id/btn_for_done"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_30sdp"
+        android:layout_gravity="right"
+        android:layout_margin="@dimen/_20sdp"
+        android:background="@drawable/btn_shape_primarycolor"
+        android:fontFamily="@font/raleway_medium"
         android:text="Done"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="@dimen/_16ssp"
-        android:fontFamily="@font/raleway_medium"
-        android:background="@drawable/btn_shape_primarycolor"
-        android:layout_margin="@dimen/_20sdp"
-        android:layout_gravity="right"/>
+        android:textSize="@dimen/_16ssp" />
 
 </LinearLayout>

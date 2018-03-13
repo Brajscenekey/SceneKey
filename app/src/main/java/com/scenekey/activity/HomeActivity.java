@@ -1475,7 +1475,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 return response;
             }
-        }.updateKeyPoint((points <= 0 ? 0 : points - 1), userInfo.userID);
+        }.updateKeyPoint((points <= 0 ? 25 : points - 1), userInfo.userID);
     }
 
     public void keyPointsUpdate() {
@@ -1508,7 +1508,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 return response;
             }
-        }.updateKeyPoint((points <= 0 ? 0 : points - 1), userInfo.userID);
+        }.updateKeyPoint((points <= 0 ? 25 : points - 1), userInfo.userID);
 
     }
 

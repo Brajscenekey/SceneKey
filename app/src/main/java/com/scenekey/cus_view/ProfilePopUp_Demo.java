@@ -55,7 +55,7 @@ public abstract class ProfilePopUp_Demo extends Dialog implements View.OnClickLi
     private   boolean isLastFilled;
 
     protected ProfilePopUp_Demo(@NonNull Activity activity, int maxNudes, NotificationData nudge, int visibility) {
-        super(activity, android.R.style.Theme_Translucent);
+        super(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         this.activity= (HomeActivity) activity;
         this.context = activity;
         this.visibility=visibility;

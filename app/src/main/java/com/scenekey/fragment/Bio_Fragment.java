@@ -41,7 +41,7 @@ public class Bio_Fragment extends Fragment implements View.OnClickListener {
     private String oldBio="";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         super.onCreateView(inflater,container,savedInstanceState);
@@ -52,6 +52,7 @@ public class Bio_Fragment extends Fragment implements View.OnClickListener {
 
         view.findViewById(R.id.btn_for_done).setOnClickListener(this);
         view.findViewById(R.id.img_f1_back).setOnClickListener(this);
+        view.findViewById(R.id.llBioFragment).setOnClickListener(this);   //for background click on fragment
 
         TextWatcher  textWatcher = new TextWatcher() {
             @Override
